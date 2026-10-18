@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#143f3b">
+  <meta name="description" content="关西 solo trip 的附近收藏、全部收藏与本机出行底卡">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="map.css">
+  <link rel="stylesheet" href="maplibre-gl.css">
+  <title>关西口袋收藏</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="overline">KANSAI POCKET MAP</div>
+        <h1>关西口袋收藏</h1>
+      </div>
+      <button id="installBtn" class="icon-btn install" hidden aria-label="添加到桌面">＋</button>
+    </header>
+
+    <main>
+      <section id="nearbyView" class="view active" aria-labelledby="nearbyTitle">
+        <div class="section-head">
+          <div><p class="eyebrow">随时打开，选一个就走</p><h2 id="nearbyTitle">附近</h2></div>
+          <button id="locateBtn" class="locate-btn">⌖ 定位</button>
+        </div>
+        <p id="locationStatus" class="status-line">未读取位置。也可以直接选城市或街区浏览。</p>
+        <div class="selector-row">
+          <label class="select-wrap"><span>区域</span><select id="nearbyCity"></select></label>
+          <label class="search-wrap"><span class="sr-only">手动输入街区或车站</span><input id="areaQuery" type="search" placeholder="街区 / 车站，如：梅田"></label>
+        </div>
+        <div id="nearbyCategories" class="chips" aria-label="地点分类"></div>
+        <div class="map-card" aria-label="收藏地图">
+          <div id="tripMap" aria-label="收藏互动地图"></div>
+          <div class="map-copy" id="mapFallback">
+            <p id="mapStatus" role="status">正在打开地图…</p>
+            <button id="loadMapBtn" class="primary-btn" hidden>重试地图</button>
+          </div>
+        </div>
+        <div class="map-caption"><span id="mapHint">点数字放大，点地点看收藏</span><a id="areaMapLink" target="_blank" rel="noopener">Google 查看区域 ↗</a></div>
+        <div class="map-options"><label><input id="viewportFilter" type="checkbox" disabled> 只看地图范围内</label><select id="radius" aria-label="附近直线范围"><option value="0">全部参考点</option><option value="2">直线 2 公里内</option><option value="5">直线 5 公里内</option><option value="10">直线 10 公里内</option></select></div>
+        <p id="coordinateCoverage" class="status-line"></p>
+        <div class="list-meta"><span id="nearbyCount">载入中…</span><span>直线参考距离，不代表路程</span></div>
+        <div id="nearbyList" class="card-list" aria-live="polite"></div>
+        <button id="nearbyMore" class="more-btn" hidden>再显示一些</button>
+      </section>
+
+      <section id="savedView" class="view" aria-labelledby="savedTitle">
+        <div class="section-head"><div><p class="eyebrow">可搜索、可标记、只存本机</p><h2 id="savedTitle">全部收藏</h2></div><button id="backupBtn" class="outline-btn">备份</button></div>
+        <label class="full-search"><span class="sr-only">搜索收藏</span><input id="savedSearch" type="search" placeholder="搜索名称、区域或备注"></label>
+        <div class="filter-grid">
+          <select id="savedCity" aria-label="城市筛选"></select>
+          <select id="savedCategory" aria-label="分类筛选"></select>
+          <select id="savedState" aria-label="状态筛选">
+            <option value="all">全部状态</option><option value="want">特别想去</option><option value="visited">去过</option><option value="unmarked">未标记</option>
+          </select>
+          <select id="savedOrigin" aria-label="来源筛选"><option value="all">全部资料</option><option value="google">Google 清单已见</option><option value="supplemental">补充候选</option></select>
+        </div>
+        <div class="list-meta"><span id="savedCount">载入中…</span><span id="dataSummary"></span></div>
+        <div id="savedList" class="card-list"></div>
+        <button id="savedMore" class="more-btn" hidden>再显示一些</button>
+      </section>
+
+      <section id="tripView" class="view" aria-labelledby="tripTitle">
+        <div class="section-head"><div><p class="eyebrow">只记录已经确定的事</p><h2 id="tripTitle">出行</h2></div><span id="tripSaveStatus" class="save-state">本机保存</span></div>
+        <p class="intro">这里默认留空。确定航班、酒店或预约后再填；数据只保存在当前浏览器。</p>
+        <form id="tripForm" class="trip-form">
+          <label><span>往返航班</span><textarea name="flights" rows="3" placeholder="例：去程航班号、日期、落地机场"></textarea></label>
+          <label><span>住宿</span><textarea name="hotels" rows="3" placeholder="酒店名称、地址、入住日期"></textarea></label>
+          <label><span>已预约</span><textarea name="bookings" rows="3" placeholder="餐厅、展览、交通票等已确认预约"></textarea></label>
+          <label><span>实用准备</span><textarea name="prep" rows="4" placeholder="保险、网络、行李、入境材料等"></textarea></label>
+          <button class="primary-btn" type="submit">保存到本机</button>
+        </form>
+        <div class="privacy-card"><strong>添加到手机桌面</strong><p>iPhone：用 Safari 打开，点“分享”→“添加到主屏幕”。Android：用 Chrome 打开，在菜单选择“添加到主屏幕 / 安装应用”。</p></div>
+        <div class="privacy-card"><strong>数据边界</strong><p>地点状态和出行底卡保存在本机；清浏览器数据前先导出备份。定位只用于本次浏览，不写入出行底卡。</p></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="主导航">
+      <button class="active" data-view="nearbyView"><span>⌖</span>附近</button>
+      <button data-view="savedView"><span>♡</span>收藏</button>
+      <button data-view="tripView"><span>▣</span>出行</button>
+    </nav>
+  </div>
+
+  <dialog id="detailDialog" class="detail-dialog"><div id="detailContent"></div></dialog>
+  <input id="restoreInput" type="file" accept="application/json" hidden>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
