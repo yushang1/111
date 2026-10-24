@@ -8,7 +8,10 @@ function loadLibrary(){
   });
   return libraryPromise;
 }
-const geojson=places=>({type:'FeatureCollection',features:places.filter(hasCoordinate).map(p=>({type:'Feature',id:p.id,properties:{id:p.id,name:p.name},geometry:{type:'Point',coordinates:[p.coordinate.lng,p.coordinate.lat]}}))});
+export function mapCategory(category){
+  return ({'吃饭':{symbol:'食',color:'#ad4935'},'咖啡':{symbol:'咖',color:'#795239'},'购物':{symbol:'购',color:'#7952a0'},'散步':{symbol:'步',color:'#27766a'},'景点':{symbol:'景',color:'#296b9c'},'住宿':{symbol:'宿',color:'#625b80'}})[category]||{symbol:'点',color:'#143f3b'};
+}
+const geojson=places=>({type:'FeatureCollection',features:places.filter(hasCoordinate).map(p=>({type:'Feature',id:p.id,properties:{id:p.id,name:p.name,category:p.category},geometry:{type:'Point',coordinates:[p.coordinate.lng,p.coordinate.lat]}}))});
 
 export async function createFreeMap(container,{onSelect,onBounds,onError}){
   const ml=await loadLibrary();
@@ -29,8 +32,8 @@ export async function createFreeMap(container,{onSelect,onBounds,onError}){
       if(!markers.has(id)){
         const button=document.createElement('button');button.type='button';
         button.className=`map-point ${isCluster?'cluster':''}`;
-        button.textContent=isCluster?String(props.point_count):'●';
-        button.setAttribute('aria-label',isCluster?`${props.point_count} 个收藏地点，放大查看`:props.name);
+        button.textContent=isCluster?String(props.point_count):mapCategory(props.category).symbol;
+        button.setAttribute('aria-label',isCluster?`${props.point_count} 个收藏地点，放大查看`:`${props.category}：${props.name}`);
         button.dataset.placeId=isCluster?'':props.id;
         const marker=new ml.Marker({element:button}).setLngLat(feature.geometry.coordinates).addTo(map);
         markers.set(id,marker);
@@ -43,8 +46,9 @@ export async function createFreeMap(container,{onSelect,onBounds,onError}){
           catch(error){console.warn('Map cluster could not expand',error.message)}
         }else{selected=props.id;syncMarkers();onSelect(props.id)}
       };
-      button.textContent=isCluster?String(props.point_count):'●';
-      button.setAttribute('aria-label',isCluster?`${props.point_count} 个收藏地点，放大查看`:props.name);
+      button.textContent=isCluster?String(props.point_count):mapCategory(props.category).symbol;
+      button.setAttribute('aria-label',isCluster?`${props.point_count} 个收藏地点，放大查看`:`${props.category}：${props.name}`);
+      if(!isCluster){button.style.setProperty('--point-color',mapCategory(props.category).color);button.dataset.category=props.category;button.title=`${props.category}：${props.name}`;}
       const current=markers.get(id).getLngLat(),[lng,lat]=feature.geometry.coordinates;
       if(current.lng!==lng||current.lat!==lat)markers.get(id).setLngLat([lng,lat]);
       if(!isCluster)button.setAttribute('aria-pressed',String(props.id===selected));

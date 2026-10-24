@@ -19,7 +19,7 @@
   },
   "supplementalCount": 43,
   "needsConfirmationCount": 30,
-  "coordinateCount": 39,
+  "coordinateCount": 60,
   "anchors": [
     {
       "name": "大阪站（梅田）",
@@ -477,10 +477,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 34.66527778,
+        "lng": 135.50694444,
+        "sourceUrl": "https://ja.wikipedia.org/?curid=70376",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=%E9%BB%91%E9%97%A8%E5%B8%82%E5%9C%BA%20%E5%A4%A7%E9%98%AA%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=%E9%BB%91%E9%97%A8%E5%B8%82%E5%9C%BA%20%E5%A4%A7%E9%98%AA%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -900,10 +906,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 34.70577778,
+        "lng": 135.49436111,
+        "sourceUrl": "https://ja.wikipedia.org/?curid=2371022",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=Grand%20Front%20Osaka%20%E5%A4%A7%E9%98%AA%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=Grand%20Front%20Osaka%20%E5%A4%A7%E9%98%AA%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -978,10 +990,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 34.6704267,
+        "lng": 135.5010678,
+        "sourceUrl": "https://www.openstreetmap.org/node/12229610602",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=Niku%20Gekijou%20Shinsaibashi%20%E5%A4%A7%E9%98%AA%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=Niku%20Gekijou%20Shinsaibashi%20%E5%A4%A7%E9%98%AA%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -1004,10 +1022,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 34.708881,
+        "lng": 135.5047462,
+        "sourceUrl": "https://www.google.com/maps/place/OSA+COFFEE/@34.708881,135.5047462,17z/data=!3m1!4b1!4m6!3m5!1s0x6000e7a3ee58f4e5:0x4c520c76a697e2d8!8m2!3d34.708881!4d135.5047462!16s%2Fg%2F11fqt892wh",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=OSA%20COFFEE%20%E5%A4%A7%E9%98%AA%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=OSA%20COFFEE%20%E5%A4%A7%E9%98%AA%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -1238,10 +1262,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 34.7031952,
+        "lng": 135.4979947,
+        "sourceUrl": "https://www.openstreetmap.org/node/5778272093",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=Hanadako%20%E5%A4%A7%E9%98%AA%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=Hanadako%20%E5%A4%A7%E9%98%AA%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -1312,10 +1342,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 33.68291667,
+        "lng": 135.34375278,
+        "sourceUrl": "https://ja.wikipedia.org/?curid=553238",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=%E7%99%BD%E8%89%AF%E6%BB%A8%20%E5%92%8C%E6%AD%8C%E5%B1%B1%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=%E7%99%BD%E8%89%AF%E6%BB%A8%20%E5%92%8C%E6%AD%8C%E5%B1%B1%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -1627,10 +1663,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 35.0037031,
+        "lng": 135.7744753,
+        "sourceUrl": "https://www.openstreetmap.org/node/4775546783",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=%E8%8C%B6%E5%AF%AE%E9%83%BD%E8%B7%AF%E9%87%8C%20%E7%A5%87%E5%9B%AD%E6%9C%AC%E5%BA%97%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=%E8%8C%B6%E5%AF%AE%E9%83%BD%E8%B7%AF%E9%87%8C%20%E7%A5%87%E5%9B%AD%E6%9C%AC%E5%BA%97%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -2064,10 +2106,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 35.00502778,
+        "lng": 135.76613889,
+        "sourceUrl": "https://en.wikipedia.org/?curid=14538385",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=%E9%94%A6%E5%B8%82%E5%9C%BA%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=%E9%94%A6%E5%B8%82%E5%9C%BA%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -2468,10 +2516,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 35.006215,
+        "lng": 135.7608455,
+        "sourceUrl": "https://www.openstreetmap.org/node/5710830422",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=Mensho%20Takamatsu%20-%20Main%20Shop%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=Mensho%20Takamatsu%20-%20Main%20Shop%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -2512,10 +2566,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 35.0013284,
+        "lng": 135.7669452,
+        "sourceUrl": "https://www.openstreetmap.org/node/7374963085",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=%E9%BA%BA%E5%B1%8B%20%E7%8C%AA%E4%B8%80%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=%E9%BA%BA%E5%B1%8B%20%E7%8C%AA%E4%B8%80%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -2660,10 +2720,16 @@
       "japaneseName": "",
       "address": "32 Sagatoriimoto Kozakacho, Kyoto",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 35.02338889,
+        "lng": 135.66675,
+        "sourceUrl": "https://ja.wikipedia.org/?curid=1076882",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=Gio-ji%2032%20Sagatoriimoto%20Kozakacho%2C%20Kyoto%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=Gio-ji%2032%20Sagatoriimoto%20Kozakacho%2C%20Kyoto%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -2686,10 +2752,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 35.003496,
+        "lng": 135.775051,
+        "sourceUrl": "https://ja.wikipedia.org/?curid=115588",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=Gion%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=Gion%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -2860,10 +2932,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 34.99647222,
+        "lng": 135.78093056,
+        "sourceUrl": "https://ja.wikipedia.org/?curid=714121",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=%E4%B8%89%E5%B9%B4%E5%9D%82%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=%E4%B8%89%E5%B9%B4%E5%9D%82%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -2912,10 +2990,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 34.9931562,
+        "lng": 135.774203,
+        "sourceUrl": "https://www.google.com/maps/place/Ichikawaya+Coffee/@34.9931562,135.774203,17z/data=!3m1!4b1!4m6!3m5!1s0x600108c9169a5c0d:0x522037b62f6c773e!8m2!3d34.9931562!4d135.774203!16s%2Fg%2F11bxb96v6v",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=Ichikawaya%20Coffee%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=Ichikawaya%20Coffee%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -3338,10 +3422,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 35.0113499,
+        "lng": 135.7456641,
+        "sourceUrl": "https://www.google.com/maps/place/CLAMP+COFFEE+SARASA/@35.0113499,135.7456641,17z/data=!3m1!4b1!4m6!3m5!1s0x600107d30fdc78d1:0x7d6d77538b8fdd36!8m2!3d35.0113499!4d135.7456641!16s%2Fg%2F11bbrlct4l",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=CLAMP%20COFFEE%20SARASA%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=CLAMP%20COFFEE%20SARASA%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -3408,10 +3498,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 35.0006713,
+        "lng": 135.7791394,
+        "sourceUrl": "https://www.google.com/maps/place/HARIO+CAFE+Kyoto+Store/@35.0006713,135.7791394,17z/data=!3m1!4b1!4m6!3m5!1s0x6001090075ff724b:0xf152dcdd498f092a!8m2!3d35.0006713!4d135.7791394!16s%2Fg%2F11y6brfxpv",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=HARIO%20CAFE%20Kyoto%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=HARIO%20CAFE%20Kyoto%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -3538,10 +3634,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 35.0406602,
+        "lng": 135.7594966,
+        "sourceUrl": "https://www.google.com/maps/place/Roastery+DAUGHTER+%26+Antiques+SON+%2F+by+Wife%26Husband/@35.0406602,135.7594966,17z/data=!3m1!4b1!4m6!3m5!1s0x6001095274ca42b9:0xf5931f9535f76457!8m2!3d35.0406602!4d135.7594966!16s%2Fg%2F11fhlrm_m6",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=Roastery%20DAUGHTER%20%26%20Antiques%20SON%20%2F%20by%20Wife%26Husband%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=Roastery%20DAUGHTER%20%26%20Antiques%20SON%20%2F%20by%20Wife%26Husband%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -3642,10 +3744,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 35.0433972,
+        "lng": 135.7617265,
+        "sourceUrl": "https://www.google.com/maps/place/WIFE+%26+HUSBAND/@35.0433972,135.7617265,17z/data=!3m1!4b1!4m6!3m5!1s0x6001081003cad7e5:0xd7cb725a4cbf7492!8m2!3d35.0433972!4d135.7617265!16s%2Fg%2F11bw47lmcd",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=WIFE%20%26%20HUSBAND%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=WIFE%20%26%20HUSBAND%20%E4%BA%AC%E9%83%BD%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -3701,7 +3809,7 @@
       "name": "ヤキニク甲",
       "city": "京都",
       "region": "酒店附近；烤肉",
-      "category": "住宿",
+      "category": "吃饭",
       "note": "作者推荐set，认为量大新鲜、只撒盐烤，喜欢店员逐道介绍与互动。",
       "sourceLabel": "京都住哪吃哪｜乌丸御池附近高性价比吃喝逛",
       "sourceUrl": "https://www.xiaohongshu.com/explore/6ac704b5000000001b02f30f",
@@ -4042,10 +4150,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 34.68805556,
+        "lng": 135.18805556,
+        "sourceUrl": "https://en.wikipedia.org/?curid=10194862",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=%E5%8D%97%E4%BA%AC%E7%94%BA%20%E7%A5%9E%E6%88%B7%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=%E5%8D%97%E4%BA%AC%E7%94%BA%20%E7%A5%9E%E6%88%B7%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -4138,7 +4252,7 @@
       "name": "神户面包超人博物馆",
       "city": "神户",
       "region": "神户港",
-      "category": "咖啡",
+      "category": "景点",
       "note": "原帖神户日游，与港塔、美利坚公园附近路线同游。",
       "sourceLabel": "关西8日游必看攻略（可直抄版）！",
       "sourceUrl": "https://www.xiaohongshu.com/explore/6aa1609c000000002b00195b",
@@ -4175,7 +4289,7 @@
       "name": "神户牛肉 石田屋 hanare",
       "city": "神户",
       "region": "神户",
-      "category": "景点",
+      "category": "吃饭",
       "note": "原帖神户日游晚餐，明确hanare分店。",
       "sourceLabel": "关西8日游必看攻略（可直抄版）！",
       "sourceUrl": "https://www.xiaohongshu.com/explore/6aa1609c000000002b00195b",
@@ -4274,10 +4388,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 34.67905556,
+        "lng": 135.18180556,
+        "sourceUrl": "https://ja.wikipedia.org/?curid=89401",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=Kobe%20Harborland%20%E7%A5%9E%E6%88%B7%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=Kobe%20Harborland%20%E7%A5%9E%E6%88%B7%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -4463,10 +4583,16 @@
       "japaneseName": "",
       "address": "",
       "officialUrl": null,
-      "coordinate": null,
-      "coordinateStatus": "坐标或分店待核",
+      "coordinate": {
+        "lat": 34.8914837,
+        "lng": 135.8066329,
+        "sourceUrl": "https://www.openstreetmap.org/way/332678063",
+        "checkedAt": "2026-10-24",
+        "precision": "地点参考点，非精确入口"
+      },
+      "coordinateStatus": "已匹配公开资料的地点参考坐标（非入口）",
       "mapSearchUrl": "https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E6%9D%91%E8%97%A4%E5%90%89%E5%B9%B3%E7%AD%89%E9%99%A2%E5%BA%97%20%E5%AE%87%E6%B2%BB%20%E6%97%A5%E6%9C%AC",
-      "mapDirectionsUrl": null,
+      "mapDirectionsUrl": "https://www.google.com/maps/dir/?api=1&destination=%E4%B8%AD%E6%9D%91%E8%97%A4%E5%90%89%E5%B9%B3%E7%AD%89%E9%99%A2%E5%BA%97%20%E5%AE%87%E6%B2%BB%20%E6%97%A5%E6%9C%AC&travelmode=walking",
       "verified": true
     },
     {
@@ -4826,7 +4952,7 @@
       "name": "無双心",
       "city": "京都",
       "region": "京都；Day3，路过的游客向拉面馆，未注明分店",
-      "category": "景点",
+      "category": "吃饭",
       "note": "因原计划店铺错过营业时间临时进入；作者称店主为老人、面量少、汤很少。需确认完整地图实体。",
       "sourceLabel": "关西solo结束之一人食🍽️京都",
       "sourceUrl": "https://www.xiaohongshu.com/explore/6ac3ecf8000000001a0298f4",
@@ -4848,7 +4974,7 @@
       "name": "小蓝瓶 Blue Bottle",
       "city": "京都",
       "region": "酒店附近，两层，可早餐；分店未给",
-      "category": "住宿",
+      "category": "咖啡",
       "note": "作者喜欢周边、二楼拍照和手打咖啡；品牌分店未明。",
       "sourceLabel": "京都住哪吃哪｜乌丸御池附近高性价比吃喝逛",
       "sourceUrl": "https://www.xiaohongshu.com/explore/6ac704b5000000001b02f30f",
@@ -4914,7 +5040,7 @@
       "name": "flip up",
       "city": "京都",
       "region": "酒店附近；面包店",
-      "category": "住宿",
+      "category": "吃饭",
       "note": "2026-10-15地图返回Flip up!（Takoyakushichō292-2）和Flip up!!（Horinouechō105），原帖未给分店，未保存。 推荐红豆奶酪酸面包，作者觉得其他巧克力面包一般。",
       "sourceLabel": "京都住哪吃哪｜乌丸御池附近高性价比吃喝逛",
       "sourceUrl": "https://www.xiaohongshu.com/explore/6ac704b5000000001b02f30f",
@@ -5002,7 +5128,7 @@
       "name": "The north face",
       "city": "京都",
       "region": "酒店附近，非紫标；未给分店",
-      "category": "住宿",
+      "category": "购物",
       "note": "作者称款式全、服务好；分店未明。",
       "sourceLabel": "京都住哪吃哪｜乌丸御池附近高性价比吃喝逛",
       "sourceUrl": "https://www.xiaohongshu.com/explore/6ac704b5000000001b02f30f",

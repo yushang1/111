@@ -1,5 +1,5 @@
 import {hasCoordinate,distanceKm,orderedPlaces,withinBounds} from './geo.mjs';
-import {createFreeMap} from './free-map.mjs';
+import {createFreeMap,mapCategory} from './free-map.mjs';
 
 const CATEGORIES=['全部','吃饭','咖啡','景点','散步','购物','住宿'];
 const $=selector=>document.querySelector(selector);
@@ -14,7 +14,8 @@ function setup(){
   setupSelect($('#nearbyCity'),cities,'全部城市');$('#nearbyCity').value='京都';
   setupSelect($('#savedCity'),cities,'全部城市');setupSelect($('#savedCategory'),CATEGORIES.slice(1),'全部分类');
   $('#nearbyCategories').innerHTML=CATEGORIES.map(c=>`<button class="chip ${c==='全部'?'active':''}" aria-pressed="${c==='全部'}" data-category="${c}">${c}</button>`).join('');
-  $('#dataSummary').textContent=`${state.data.googleAudit.mappedEntries} 条清单记录已核对 · ${state.data.supplementalCount} 条补充候选`;
+  $('#mapLegend').innerHTML=CATEGORIES.slice(1).map(c=>`<span><i style="--point-color:${mapCategory(c).color}">${mapCategory(c).symbol}</i>${c}</span>`).join('');
+  $('#dataSummary').textContent=`${state.data.googleAudit.mappedEntries} 条历史清单核对 · ${state.data.places.filter(p=>p.verified&&!p.googleListRecord).length} 条后续保存记录 · ${state.data.places.filter(p=>!p.verified).length} 条待确认`;
   $('#coordinateCoverage').textContent=`${state.data.coordinateCount}/${state.data.count} 条已匹配公开参考坐标。其余保留在收藏中；直线距离不等于步行距离。`;
   const note=document.createElement('p');note.className='status-line';note.textContent=state.data.coverageNote;$('#savedCount').parentElement.after(note);
   bind();renderNearby();renderSaved();restoreTrip();startMap();
@@ -64,7 +65,8 @@ function renderNearby(fit=false){
   // Use the full city/category selection for map points; viewport filtering affects cards only.
   const radius=Number($('#radius').value),point=referencePosition();
   const mapped=nearbyBase().filter(p=>hasCoordinate(p)&&(!radius||!point||distanceKm(point,p.coordinate)<=radius));
-  $('#mapHint').textContent=mapped.length?'点数字放大，点地点看收藏':'这组收藏还没有可上图的坐标，请在下方查看';
+  const unlocated=nearbyBase().filter(p=>!hasCoordinate(p)).length;
+  $('#mapHint').textContent=mapped.length?`${mapped.length} 个地点可在地图查看${unlocated?' · '+unlocated+' 个位置待核':''}，点数字放大`:'这组收藏的位置仍待核对，请在下方查看';
   state.map?.update(mapped,{fit,selectedId:state.selectedId});
 }
 function filteredSaved(){
@@ -101,7 +103,7 @@ function selectPlace(id){
 function showDetail(place){
   const coordinate=place.coordinate;
   const link=(url,label)=>url?`<a href="${esc(url)}" target="_blank" rel="noopener">${label}</a>`:'';
-  $('#detailContent').innerHTML=`<div class="detail-inner"><div class="eyebrow">${esc(place.city)} · ${esc(place.category)}</div><h2>${esc(place.name)}</h2><div class="place-sub">${esc(place.japaneseName||'日文名称待核')}</div><dl><dt>区域</dt><dd>${esc(place.region)}</dd><dt>地址</dt><dd>${esc(place.address||'尚未核对完整地址，请在 Google Maps 确认')}</dd><dt>收藏备注</dt><dd>${esc(place.note||'暂无')}</dd><dt>收藏来源</dt><dd>${esc(place.sourceLabel)}；笔记经验不代表实时营业、价格或排队。${link(place.sourceUrl,'原笔记')}</dd><dt>记录状态</dt><dd>${esc(place.evidence)}</dd><dt>坐标</dt><dd>${esc(place.coordinateStatus)}${coordinate?`<br>${coordinate.lat}, ${coordinate.lng}<br>${link(coordinate.sourceUrl,'公开资料来源')} · 2026-10-18 匹配`:''}</dd>${place.officialUrl?`<dt>官网</dt><dd>${link(place.officialUrl,'查看官方网页')}</dd>`:''}</dl><div class="detail-actions"><a href="${esc(place.mapDirectionsUrl||place.mapSearchUrl)}" target="_blank" rel="noopener">${coordinate?'Google 步行路线':'Google 搜索确认'}</a><button id="closeDetail">关闭</button></div></div>`;
+  $('#detailContent').innerHTML=`<div class="detail-inner"><div class="eyebrow">${esc(place.city)} · ${esc(place.category)}</div><h2>${esc(place.name)}</h2><div class="place-sub">${esc(place.japaneseName||'日文名称待核')}</div><dl><dt>区域</dt><dd>${esc(place.region)}</dd><dt>地址</dt><dd>${esc(place.address||'尚未核对完整地址，请在 Google Maps 确认')}</dd><dt>收藏备注</dt><dd>${esc(place.note||'暂无')}</dd><dt>收藏来源</dt><dd>${esc(place.sourceLabel)}；笔记经验不代表实时营业、价格或排队。${link(place.sourceUrl,'原笔记')}</dd><dt>记录状态</dt><dd>${esc(place.evidence)}</dd><dt>坐标</dt><dd>${esc(place.coordinateStatus)}${coordinate?`<br>${coordinate.lat}, ${coordinate.lng}<br>${link(coordinate.sourceUrl,'公开资料来源')} · ${esc(coordinate.checkedAt||'日期未记录')} 匹配`:''}</dd>${place.officialUrl?`<dt>官网</dt><dd>${link(place.officialUrl,'查看官方网页')}</dd>`:''}</dl><div class="detail-actions"><a href="${esc(place.mapDirectionsUrl||place.mapSearchUrl)}" target="_blank" rel="noopener">${coordinate?'Google 步行路线':'Google 搜索确认'}</a><button id="closeDetail">关闭</button></div></div>`;
   $('#detailDialog').showModal();$('#closeDetail').onclick=()=>$('#detailDialog').close();
 }
 function mapFailure(message){$('#mapFallback').hidden=false;$('#mapStatus').textContent=message;$('#loadMapBtn').hidden=false;$('#loadMapBtn').disabled=false;$('#loadMapBtn').textContent='重试地图';state.map?.dispose();state.map=null;$('#viewportFilter').checked=false;$('#viewportFilter').disabled=true;renderNearby();renderSaved()}

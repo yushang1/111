@@ -1,4 +1,4 @@
-const CACHE='kansai-pocket-v5-catalog-20261024';
+const CACHE='kansai-pocket-v6-categories-20261024';
 const ASSETS=['./','index.html','app.css','map.css','app.js','geo.mjs','free-map.mjs','maplibre-gl.js','maplibre-gl.css','icon.svg','icon-192.png','icon-512.png','manifest.webmanifest','places.json'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('kansai-pocket-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
