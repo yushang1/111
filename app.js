@@ -141,5 +141,5 @@ function restoreBackup(event){
     state.marks=marks;writeLocal('kansai-marks',marks);writeLocal('kansai-trip-card',trip);restoreTrip();renderNearby();renderSaved();$('#detailDialog').close();
   }catch{alert('无法读取这个备份文件')}};reader.readAsText(file);event.target.value='';
 }
-fetch('places.json').then(response=>{if(!response.ok)throw Error('data');return response.json()}).then(data=>{state.data=data;setup()}).catch(()=>{$('#nearbyList').innerHTML='<div class="privacy-card">地点数据加载失败，请稍后重新打开。</div>'});
+fetch('places.json?v=food-20261024',{cache:'no-cache'}).then(response=>{if(!response.ok)throw Error('data');return response.json()}).then(data=>{state.data=data;setup()}).catch(()=>{$('#nearbyList').innerHTML='<div class="privacy-card">地点数据加载失败，请稍后重新打开。</div>'});
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
