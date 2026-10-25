@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="app.css">
   <link rel="stylesheet" href="map.css">
-  <link rel="stylesheet" href="transit.css?v=transit-20261025">
+  <link rel="stylesheet" href="transit.css?v=transit-20261025b">
   <link rel="stylesheet" href="maplibre-gl.css">
   <title>关西口袋收藏</title>
 </head>
@@ -73,12 +73,6 @@
         <p class="intro">先选这段路，再对照导航和现场屏幕。以下是认车参考，不是实时车次；当天站台、时刻和停站以现场为准。</p>
         <div id="transitRoutes" class="transit-routes" aria-label="选择乘车路段"></div>
         <article id="transitCard" class="transit-card" aria-live="polite"></article>
-        <details class="transit-help"><summary>现场照片：到底看屏幕哪里？</summary>
-          <p>先找导航对应的<strong>开车时间、车种、方向、站台</strong>，再看车侧显示。方向终点可能在你的下车站之后，还要核对停站。车身颜色只作辅助。</p>
-          <figure><a href="https://www.westjr.co.jp/travel-information/assets/img/train-usage-guide/howto/howtosign/img_bord05.webp" target="_blank" rel="noopener"><img loading="lazy" src="https://www.westjr.co.jp/travel-information/assets/img/train-usage-guide/howto/howtosign/img_bord05.webp" alt="JR官方站台电子屏示例，核对开车时间、车种、方向和站台"></a><figcaption>① 看站台电子屏。点击图片放大。</figcaption></figure>
-          <figure><a href="https://www.westjr.co.jp/travel-information/assets/img/train-usage-guide/howto/howtosign/img_banner01.webp" target="_blank" rel="noopener"><img loading="lazy" src="https://www.westjr.co.jp/travel-information/assets/img/train-usage-guide/howto/howtosign/img_banner01.webp" alt="JR官方车侧车种显示示例，上车前再次确认车种"></a><figcaption>② 看车侧显示，再确认车种。</figcaption></figure>
-          <p class="transit-small">照片来自JR西日本官方，为教学示例，不能据图认定当天的站台或列车。照片需要联网；未显示时仍可按上面的文字核对。<a href="https://www.westjr.co.jp/travel-information/en/train-usage-guide/howto/howtosign/" target="_blank" rel="noopener">打开完整官方图解 ↗</a></p>
-        </details>
         <details class="transit-help"><summary>普通、快速、新快速、特急，怎么区分？</summary>
           <dl class="transit-terms"><dt>普通／各駅停車 · Local</dt><dd>通常每站停。即使方向一样，也可能比导航选中的车慢。</dd><dt>快速 · Rapid</dt><dd>跳过部分车站。确认你要下的站在停站表里。</dd><dt>新快速 · Special Rapid</dt><dd>JR的一种车种；京都到大阪的普通车厢不需另买特急券。若出现A-seat等付费座席，要另外确认。</dd><dt>特急 · Limited Express</dt><dd>收费规则看公司和车厢。JR HARUKA、南海Rapi:t、近铁特急需要对应特急票；不要套用成“所有公司的特急都收费”。</dd></dl>
           <p>JR、阪急、近铁、南海是不同铁路公司；“普通／快速／特急”是车种，两件事分开看。同一站台可能先后开不同车种，不能来一辆就上。</p>
@@ -114,6 +108,6 @@
   <dialog id="detailDialog" class="detail-dialog"><div id="detailContent"></div></dialog>
   <input id="restoreInput" type="file" accept="application/json" hidden>
   <script type="module" src="app.js?v=food-20261024"></script>
-  <script type="module" src="transit.js?v=transit-20261025"></script>
+  <script type="module" src="transit.js?v=transit-20261025b"></script>
 </body>
 </html>
