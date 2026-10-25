@@ -1,5 +1,5 @@
-const CACHE='kansai-pocket-v8-food-cache-20261024';
-const ASSETS=['./','index.html','app.css','map.css','app.js','geo.mjs','free-map.mjs','maplibre-gl.js','maplibre-gl.css','icon.svg','icon-192.png','icon-512.png','manifest.webmanifest','places.json'];
+const CACHE='kansai-pocket-v9-transit-20261025';
+const ASSETS=['./','index.html','app.css','map.css','transit.css','transit.js','app.js','geo.mjs','free-map.mjs','maplibre-gl.js','maplibre-gl.css','icon.svg','icon-192.png','icon-512.png','manifest.webmanifest','places.json'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('kansai-pocket-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
