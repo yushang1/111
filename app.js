@@ -42,7 +42,7 @@ function showView(id){document.querySelectorAll('.view').forEach(view=>view.clas
 function nearbyBase(){
   const query=$('#areaQuery').value.trim().toLowerCase();
   const anchor=selectedAnchor();
-  return orderedPlaces(state.data.places.filter(place=>(anchor?place.city===anchor.city:state.nearbyCity==='all'||place.city===state.nearbyCity)&&(state.nearbyCategory==='全部'||place.category===state.nearbyCategory)&&(!query||(anchor?hasCoordinate(place)&&distanceKm(anchor.coordinate,place.coordinate)<=5:`${place.name} ${place.japaneseName} ${place.region}`.toLowerCase().includes(query)))),referencePosition());
+  return orderedPlaces(state.data.places.filter(place=>(anchor?place.city===anchor.city:state.nearbyCity==='all'||place.city===state.nearbyCity)&&(state.nearbyCategory==='全部'||place.category===state.nearbyCategory)&&(!query||(anchor?hasCoordinate(place)&&(!Number($('#radius').value)||distanceKm(anchor.coordinate,place.coordinate)<=Number($('#radius').value)):`${place.name} ${place.japaneseName} ${place.region}`.toLowerCase().includes(query)))),referencePosition());
 }
 function selectedAnchor(){const query=$('#areaQuery').value.trim().toLowerCase();return state.data.anchors?.find(anchor=>anchor.aliases.some(alias=>alias.toLowerCase()===query))}
 function referencePosition(){return selectedAnchor()?.coordinate||state.position}
@@ -57,7 +57,7 @@ function filteredNearby(){
 function renderNearby(fit=false){
   const items=filteredNearby();let shown=items.slice(0,state.nearbyLimit);
   const selected=items.find(p=>p.id===state.selectedId);if(selected&&!shown.includes(selected))shown=[selected,...shown.slice(0,-1)];
-  $('#nearbyCount').textContent=`${selectedAnchor()?selectedAnchor().name+'直线 5 公里内：':'当前显示 '}${items.length} 个地点`;
+  $('#nearbyCount').textContent=`${selectedAnchor()?selectedAnchor().name+(Number($('#radius').value)?'直线 '+Number($('#radius').value)+' 公里内：':'全部参考点：'):'当前显示 '}${items.length} 个地点`;
   $('#nearbyList').innerHTML=shown.length?shown.map(placeCard).join(''):'<div class="privacy-card">当前范围没有匹配地点。可扩大范围或手动选择城市；无坐标的地点仍在全部收藏中。</div>';
   $('#nearbyMore').hidden=shown.length>=items.length;
   const area=$('#areaQuery').value.trim()||(state.nearbyCity==='all'?'关西':state.nearbyCity);
@@ -71,7 +71,7 @@ function renderNearby(fit=false){
 }
 function filteredSaved(){
   const query=$('#savedSearch').value.trim().toLowerCase(),city=$('#savedCity').value,cat=$('#savedCategory').value,mark=$('#savedState').value,origin=$('#savedOrigin').value;
-  return state.data.places.filter(place=>(city==='all'||place.city===city)&&(cat==='all'||place.category===cat)&&(!query||`${place.name} ${place.googleListRecord?.name||''} ${place.japaneseName} ${place.region} ${place.note} ${place.sourceLabel}`.toLowerCase().includes(query))&&(mark==='all'||(mark==='unmarked'?!state.marks[place.id]:state.marks[place.id]===mark))&&(origin==='all'||(origin==='google'?Boolean(place.googleListRecord):!place.googleListRecord)));
+  return state.data.places.filter(place=>(city==='all'||place.city===city)&&(cat==='all'||place.category===cat)&&(!query||`${place.name} ${place.googleListRecord?.name||''} ${place.japaneseName} ${place.region} ${place.note} ${place.sourceLabel}`.toLowerCase().includes(query))&&(mark==='all'||(mark==='unmarked'?!state.marks[place.id]:state.marks[place.id]===mark))&&(origin==='all'||(origin==='google'?Boolean(place.googleListRecord):origin==='saved'?Boolean(place.localSavedRecord)&&!place.googleListRecord:!place.googleListRecord&&!place.localSavedRecord)));
 }
 function renderSaved(){const items=filteredSaved(),shown=items.slice(0,state.savedLimit);$('#savedCount').textContent=`找到 ${items.length} 个地点`;$('#savedList').innerHTML=shown.length?shown.map(placeCard).join(''):'<div class="privacy-card">没有匹配收藏。</div>';$('#savedMore').hidden=shown.length>=items.length}
 function distanceLabel(place){
