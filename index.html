@@ -8,7 +8,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="app.css?v=fixes-20261107">
   <link rel="stylesheet" href="map.css">
   <link rel="stylesheet" href="maplibre-gl.css">
   <title>关西口袋收藏</title>
@@ -70,7 +70,7 @@
           <select id="savedState" aria-label="状态筛选">
             <option value="all">全部状态</option><option value="want">特别想去</option><option value="visited">去过</option><option value="unmarked">未标记</option>
           </select>
-          <select id="savedOrigin" aria-label="来源筛选"><option value="all">全部资料</option><option value="google">Google 清单已见</option><option value="supplemental">补充候选</option></select>
+          <select id="savedOrigin" aria-label="来源筛选"><option value="all">全部资料</option><option value="google">历史清单已核对</option><option value="saved">后续已有保存记录</option><option value="supplemental">待确认候选</option></select>
         </div>
         <div class="list-meta"><span id="savedCount">载入中…</span><span id="dataSummary"></span></div>
         <div id="savedList" class="card-list"></div>
@@ -104,7 +104,7 @@
 
   <dialog id="detailDialog" class="detail-dialog"><div id="detailContent"></div></dialog>
   <input id="restoreInput" type="file" accept="application/json" hidden>
-  <script type="module" src="app.js?v=maps-20261103"></script>
-  <script type="module" src="assets/transit.js?v=transit-tickets-20261026"></script>
+  <script type="module" src="app.js?v=fixes-20261107"></script>
+  <script type="module" src="transit.js?v=fixes-20261107"></script>
 </body>
 </html>
