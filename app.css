@@ -6,3 +6,122 @@
 .ticket-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:39px;margin:0 0 12px;padding:9px 11px;border:1px solid #dce5d8;border-radius:11px;background:#f0f4eb;color:#45654d;text-align:left;font-size:11px;line-height:1.5;cursor:pointer}.ticket-summary-price{display:flex;align-items:baseline;gap:9px;min-width:0}.ticket-summary-price>span{color:#7c8c78;white-space:nowrap}.ticket-summary-price strong{font-weight:650;font-size:12px}.ticket-summary-status{display:flex;gap:9px;align-items:center;white-space:nowrap}.ticket-summary-status>span{font-size:19px;line-height:1;color:#829479}.ticket-summary.reserve{background:#f7f1e2;border-color:#e9dfc7;color:#92743b}.ticket-summary.blocked{background:#faeee7;border-color:#eed8cb;color:#9b583d}.ticket-summary.check{background:#f2f0e9;border-color:#e4dfd1;color:#827558}.ticket-summary:focus-visible,.ticket-buy-link:focus-visible{outline:3px solid #b2c49c;outline-offset:3px}.ticket-info{margin:20px 0 23px;padding:17px;border:1px solid #dbe3d6;border-radius:16px;background:#f2f5ed;outline:none}.ticket-info-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.ticket-info-head h3{margin:0;font-size:15px}.ticket-info-head>span{font-size:10px;background:#e2e9d8;color:#5c7450;padding:3px 7px;border-radius:5px;white-space:nowrap}.ticket-detail-price{font-size:27px!important;font-weight:650;color:var(--ink)!important;margin:13px 0 4px!important;letter-spacing:-.6px}.ticket-detail-price small{display:block;font-size:10px;color:var(--muted);font-weight:400;letter-spacing:0;margin-top:2px}.ticket-info p,.ticket-info li{font-size:12px;color:var(--ink-2);line-height:1.9}.ticket-price-note{margin:8px 0 12px}.ticket-info h4{font-size:12px;margin:20px 0 8px}.ticket-info ol{padding-left:19px;margin:0}.ticket-info li{padding-left:2px;margin:0 0 9px}.ticket-action-note{padding:10px 12px;background:#e7ecde;border-radius:9px;font-size:12px;line-height:1.9}.ticket-info.blocked{background:#faf4ed;border-color:#ead4c5}.ticket-info.blocked .ticket-action-note{background:#f4e5d9;color:#91563b}.ticket-info.blocked .ticket-info-head>span{background:#f0dfd3;color:#965c40}.ticket-buy-link{display:block;padding:11px 12px;background:var(--ink);color:white!important;border-radius:10px;text-decoration:none;text-align:center;font-size:12px;font-weight:650;margin-top:18px}.ticket-source-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.ticket-source-links a{font-size:11px;color:var(--ink-2);text-underline-offset:3px}.ticket-checked{font-size:10px!important;color:var(--muted)!important;margin:17px 0 0;padding-top:12px;border-top:1px solid #dce2d4}.detail-close-top{position:sticky;top:0;float:right;z-index:1;margin:-7px -7px 0 8px;width:32px;height:32px;border:1px solid var(--line);border-radius:50%;font-size:21px;color:var(--ink);background:var(--card);cursor:pointer}.detail-dialog{max-height:calc(100dvh - 28px);overflow:auto}.ticket-info a{overflow-wrap:anywhere}
 
 /* TICKET_CARD_STYLES_END */
+
+/* Pocket guide layout */
+:root {
+  --ink: #1c453b;
+  --ink-2: #425b50;
+  --paper: #f6f4ec;
+  --card: #fffef9;
+  --line: #d6dacf;
+  --muted: #596c61;
+}
+body {background: var(--paper)}
+.app-shell {max-width:1100px}
+.topbar {
+  height:58px; margin:0 16px; padding:0 2px;
+  border-bottom:1px solid #bdcabd;
+}
+.brand {display:flex; align-items:center; gap:10px}
+.brand-mark {
+  display:grid; place-items:center; width:29px; height:32px;
+  border:1px solid #9d503d; border-radius:4px;
+  color:#934535; font:700 23px/1 "Songti SC","Noto Serif CJK SC",serif;
+}
+.topbar h1 {margin:0; font-size:17px; letter-spacing:.05em}
+.section-head {align-items:center; margin:15px 0}
+.section-head h2 {font:650 30px/1.2 "Songti SC","Noto Serif CJK SC",serif; letter-spacing:.02em}
+.locate-btn,.outline-btn,.filter-toggle {min-height:42px; border:1px solid var(--line); border-radius:10px; background:var(--card); padding:7px 13px; font-size:14px; font-weight:600}
+.full-search,.search-wrap,.select-wrap {border-radius:11px; box-shadow:none}
+.full-search input,.search-wrap input,.filter-grid select,.trip-form textarea {font-size:16px}
+.full-search {position:relative; padding-left:34px}
+.full-search::before,.full-search::after {content:""; position:absolute; pointer-events:none}
+.full-search::before {width:12px; height:12px; left:16px; top:14px; border:2px solid #66796c; border-radius:100%}
+.full-search::after {left:29px; top:28px; width:7px; height:2px; background:#66796c; transform:rotate(45deg)}
+.saved-tools {display:flex; align-items:center; justify-content:space-between; gap:6px; margin-top:10px}
+.scope-switch {padding:3px; display:flex; background:#e8eae0; border-radius:12px}
+.scope-switch button {background:transparent; color:var(--ink-2); border:0; border-radius:9px; padding:6px 12px; min-height:38px; font-size:14px}
+.scope-switch button[aria-pressed=true],.filter-toggle[aria-expanded=true] {background:var(--ink); color:white}
+.text-btn {color:var(--ink); padding:6px; border:0; background:none; font-size:13px; text-decoration:underline; text-underline-offset:3px}
+.list-meta {align-items:center; min-height:28px; margin:12px 2px 5px}
+#savedCount,#nearbyCount {color:var(--ink-2); font-weight:650; font-size:13px}
+.source-archive,.map-settings {margin:12px 0; border-block:1px solid var(--line); padding:0 2px; font-size:13px; color:var(--ink-2)}
+.source-archive>summary,.map-settings>summary {padding:12px 3px; cursor:pointer; font-weight:600}
+.source-archive .privacy-card {margin:4px 0 10px}
+.map-pane,.nearby-results,.place-top>div {min-width:0}
+.map-pane #tripMap {height:clamp(210px,31svh,330px)}
+.map-pane .map-card {border-radius:15px; margin-bottom:6px}
+.map-settings {margin:3px 0 0}
+.map-pane .map-caption {font-size:12px; margin:5px 0}
+.map-pane .map-legend {margin-top:4px}
+.chip {min-height:38px}
+.place-card {
+  display:flex; flex-direction:column; padding:15px 16px 10px;
+  border:1px solid var(--line); border-radius:15px;
+  box-shadow:0 2px 6px rgba(25,55,35,.035);
+}
+.place-card .place-title {padding:0; border:0; background:transparent; font:inherit; color:inherit; text-align:left; cursor:pointer}
+.place-title::after {content:"›"; font:400 17px sans-serif; color:#748679; margin-left:5px}
+.place-card h3 {font-size:19px; line-height:1.4}
+.place-sub {line-height:1.5}
+.place-card .tag {font-size:11px; color:#52665a; border-radius:5px; background:#eef1e9}
+.place-card .tag.pending {color:#84512b; background:#faf0df}
+.place-note {font-size:14px; line-height:1.55; margin:8px 0 10px}
+.place-card .distance {margin:0 0 8px; font-size:12px}
+.place-card .card-actions {margin-top:auto; padding-top:6px; border-top:1px solid #e6e8df; align-items:center; gap:6px}
+.place-card .card-actions .map-btn,.place-card .card-actions .detail-btn {font-size:13px; min-height:42px; padding:0 9px; border-radius:8px}
+.card-actions .map-btn {background:#e8eee5; color:var(--ink)}
+.card-actions .detail-btn {background:transparent}
+.card-actions .state-btn {min-width:40px; border-radius:9px}
+.place-card .ticket-summary {min-height:44px; margin-bottom:8px; font-size:13px}
+.ticket-summary-price strong {font-size:15px; font-variant-numeric:tabular-nums}
+.ticket-summary-price>span {color:#52684f}
+.ticket-summary.reserve {color:#735724}
+.ticket-summary.blocked {color:#85462d}
+.ticket-summary.check {color:#685a39}
+.detail-inner {padding:21px}
+.detail-inner h2 {margin:6px 0}
+.route-action {display:inline-flex; gap:12px; align-items:center; padding:8px 12px; min-height:42px; border:1px solid #cdd8cb; border-radius:9px; background:#edf2e9; font-weight:600; font-size:14px; margin:12px 0 0}
+.detail-close-top {width:40px; height:40px}
+.ticket-info {padding:14px; margin:12px 0 18px}
+.ticket-info h3 {font-size:18px}
+.ticket-info h4,.ticket-info p,.ticket-info li,.ticket-info .ticket-action-note,.ticket-buy-link {font-size:14px; line-height:1.65}
+.ticket-info .ticket-source-links a {font-size:13px; padding:4px 0}
+.ticket-checked {font-size:12px!important}
+.ticket-info-head>span {font-size:12px}
+.bottom-nav {width:min(1100px,100%); gap:5px; padding-inline:max(12px,env(safe-area-inset-left))}
+.bottom-nav button {justify-content:center; border-radius:11px; font-size:12px; color:#596b60}
+.bottom-nav button.active {background:#e3ebdf; color:#194b39}
+.bottom-nav button span {font-family:system-ui,sans-serif; line-height:1}
+.trip-form,.journey {padding:16px; background:var(--card); border:1px solid var(--line); border-radius:16px}
+.trip-form textarea {width:100%; background:#fafaf5; border-radius:10px}
+.trip-form label span {font-size:14px}
+.trip-form label,.journey label {min-width:0}
+@media(min-width:720px){
+  .topbar {margin-inline:24px}
+  .saved-tools {justify-content:flex-start; gap:12px}
+  .filter-grid {grid-template-columns:repeat(4,minmax(0,1fr))}
+  #savedList {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bottom-nav {padding-inline:max(12px,calc((min(1100px,100%) - 560px)/2))}
+  #tripView,#transitView {max-width:760px; margin-inline:auto}
+}
+@media(min-width:900px){
+  .nearby-layout {display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:22px; align-items:start; margin-top:10px}
+  .map-pane {position:sticky; top:12px}
+  .map-pane .map-card,.nearby-results .list-meta {margin-top:0}
+  .map-pane #tripMap {height:clamp(320px,52vh,580px)}
+  #nearbyList {grid-template-columns:1fr}
+  .card-list {gap:14px}
+  #savedView .full-search {max-width:670px}
+}
+@media(max-width:350px){
+  .scope-switch button {padding-inline:8px}
+  .view {padding-inline:10px}
+  .place-card {padding-inline:12px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after {scroll-behavior:auto!important}}
+
+.saved-meta .source-archive {margin:0 0 0 auto; border:0}
+.saved-meta .source-archive>summary {padding:7px 2px; font-size:12px}
+.saved-meta .source-archive[open] {width:100%}
+.place-top h3,.detail-inner h2,.detail-inner dd {overflow-wrap:anywhere}

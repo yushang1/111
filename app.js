@@ -27,7 +27,7 @@ const $=selector=>document.querySelector(selector);
 const esc=value=>String(value??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function readLocal(key,fallback={}){try{return JSON.parse(localStorage.getItem(key))||fallback}catch{return fallback}}
 function writeLocal(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch{alert('浏览器无法保存本机数据，请使用备份功能保留内容。');return false}}
-const state={data:null,marks:readLocal('kansai-marks'),nearbyCity:'京都',nearbyCategory:'全部',nearbyLimit:12,savedLimit:24,position:null,map:null,mapBounds:null,selectedId:null};
+const state={data:null,marks:readLocal('kansai-marks'),nearbyCity:'京都',nearbyCategory:'全部',nearbyLimit:12,savedLimit:24,savedScope:'all',position:null,map:null,mapBounds:null,selectedId:null};
 
 function setupSelect(select,values,allLabel){select.innerHTML=[allLabel,...values].map((v,i)=>`<option value="${i?esc(v):'all'}">${esc(v)}</option>`).join('')}
 function setup(){
@@ -36,19 +36,39 @@ function setup(){
   setupSelect($('#savedCity'),cities,'全部城市');setupSelect($('#savedCategory'),CATEGORIES.slice(1),'全部分类');
   $('#nearbyCategories').innerHTML=CATEGORIES.map(c=>`<button class="chip ${c==='全部'?'active':''}" aria-pressed="${c==='全部'}" data-category="${c}">${c}</button>`).join('');
   $('#mapLegend').innerHTML=CATEGORIES.slice(1).map(c=>`<span><i style="--point-color:${mapCategory(c).color}">${mapCategory(c).symbol}</i>${c}</span>`).join('');
-  const audit=document.createElement('details');audit.className='privacy-card';const summary=document.createElement('summary');summary.textContent='收藏资料说明';const counts=document.createElement('p');counts.textContent=`${state.data.googleAudit.mappedEntries} 条历史清单核对 · ${state.data.places.filter(p=>p.verified&&!p.googleListRecord).length} 条后续保存记录 · ${state.data.places.filter(p=>!p.verified).length} 条待确认`;const coverage=document.createElement('p');coverage.textContent=state.data.coverageNote;audit.append(summary,counts,coverage);$('#savedCount').parentElement.after(audit);
+  const audit=document.createElement('details');audit.className='privacy-card';const summary=document.createElement('summary');summary.textContent='收藏资料说明';const counts=document.createElement('p');counts.textContent=`${state.data.googleAudit.mappedEntries} 条历史清单核对 · ${state.data.places.filter(p=>p.verified&&!p.googleListRecord).length} 条后续保存记录 · ${state.data.places.filter(p=>!p.verified).length} 条待确认`;const coverage=document.createElement('p');coverage.textContent=state.data.coverageNote;audit.append(summary,counts,coverage);$('#sourceArchive').append(audit);
   $('#coordinateCoverage').textContent=`${state.data.coordinateCount}/${state.data.count} 条已匹配公开参考坐标。其余保留在收藏中；直线距离不等于步行距离。`;
   bind();renderNearby();renderSaved();restoreTrip();startMap();
 }
 function bind(){
   document.querySelectorAll('.bottom-nav button').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.view)));
-  $('#nearbyCity').addEventListener('change',event=>{state.nearbyCity=event.target.value;state.nearbyLimit=12;state.mapBounds=null;$('#viewportFilter').checked=false;renderNearby(true)});
+  $('#nearbyCity').addEventListener('change',event=>{state.nearbyCity=event.target.value;$('#areaQuery').value='';state.nearbyLimit=12;state.mapBounds=null;$('#viewportFilter').checked=false;renderNearby(true)});
   $('#areaQuery').addEventListener('input',()=>{const anchor=selectedAnchor();if(anchor){state.nearbyCity=anchor.city;$('#nearbyCity').value=anchor.city}state.nearbyLimit=12;renderNearby(true)});
   $('#nearbyCategories').addEventListener('click',event=>{const button=event.target.closest('button');if(!button)return;state.nearbyCategory=button.dataset.category;state.nearbyLimit=12;document.querySelectorAll('#nearbyCategories button').forEach(x=>{x.classList.toggle('active',x===button);x.setAttribute('aria-pressed',String(x===button))});renderNearby(true)});
   $('#radius').addEventListener('change',()=>{state.nearbyLimit=12;renderNearby(true)});
   $('#viewportFilter').addEventListener('change',()=>{state.nearbyLimit=12;renderNearby()});
   $('#nearbyMore').addEventListener('click',()=>{state.nearbyLimit+=12;renderNearby()});
   for(const id of ['savedSearch','savedCity','savedCategory','savedState','savedOrigin'])$('#'+id).addEventListener(id==='savedSearch'?'input':'change',()=>{state.savedLimit=24;renderSaved()});
+  $('#savedScopes').addEventListener('click',event=>{
+    const button=event.target.closest('[data-scope]');
+    if(!button)return;
+    state.savedScope=button.dataset.scope;
+    state.savedLimit=24;
+    renderSaved();
+  });
+  $('#filterToggle').addEventListener('click',()=>{
+    const panel=$('#savedFilters');
+    panel.hidden=!panel.hidden;
+    $('#filterToggle').setAttribute('aria-expanded',String(!panel.hidden));
+  });
+  $('#clearFilters').addEventListener('click',()=>{
+    $('#savedSearch').value='';
+    for(const select of $('#savedFilters').querySelectorAll('select'))select.value='all';
+    state.savedScope='all';
+    state.savedLimit=24;
+    renderSaved();
+    $('#savedSearch').focus();
+  });
   $('#savedMore').addEventListener('click',()=>{state.savedLimit+=24;renderSaved()});
   $('#locateBtn').addEventListener('click',locate);$('#loadMapBtn').addEventListener('click',startMap);
   $('#backupBtn').addEventListener('click',showBackup);$('#restoreInput').addEventListener('change',restoreBackup);
@@ -58,7 +78,7 @@ function bind(){
   window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();window.installPrompt=event;$('#installBtn').hidden=false});
   $('#installBtn').addEventListener('click',async()=>{if(window.installPrompt){await window.installPrompt.prompt();window.installPrompt=null;$('#installBtn').hidden=true}});
 }
-function showView(id){document.querySelectorAll('.view').forEach(view=>view.classList.toggle('active',view.id===id));document.querySelectorAll('.bottom-nav button').forEach(btn=>btn.classList.toggle('active',btn.dataset.view===id));scrollTo({top:0,behavior:'smooth'});if(id==='nearbyView')requestAnimationFrame(()=>state.map?.resize())}
+function showView(id){document.querySelectorAll('.view').forEach(view=>view.classList.toggle('active',view.id===id));document.querySelectorAll('.bottom-nav button').forEach(btn=>{const active=btn.dataset.view===id;btn.classList.toggle('active',active);if(active)btn.setAttribute('aria-current','page');else btn.removeAttribute('aria-current')});scrollTo({top:0,behavior:'instant'});if(id==='nearbyView')requestAnimationFrame(()=>state.map?.resize())}
 function nearbyBase(){
   const query=$('#areaQuery').value.trim().toLowerCase();
   const anchor=selectedAnchor();
@@ -66,16 +86,18 @@ function nearbyBase(){
 }
 function selectedAnchor(){const query=$('#areaQuery').value.trim().toLowerCase();return state.data.anchors?.find(anchor=>anchor.aliases.some(alias=>alias.toLowerCase()===query))}
 function referencePosition(){return selectedAnchor()?.coordinate||state.position}
-function filteredNearby(){
+function filteredNearby(base=nearbyBase()){
   const radius=Number($('#radius').value),bounds=$('#viewportFilter').checked?state.mapBounds:null;
-  return nearbyBase().filter(place=>{
+  return base.filter(place=>{
     if(radius&&referencePosition()&&(!hasCoordinate(place)||distanceKm(referencePosition(),place.coordinate)>radius))return false;
     if(bounds&&(!hasCoordinate(place)||!withinBounds(place.coordinate,bounds)))return false;
     return true;
   });
 }
 function renderNearby(fit=false){
-  const items=filteredNearby();let shown=items.slice(0,state.nearbyLimit);
+  const base=nearbyBase();
+  $('#radius').disabled=!referencePosition();
+  const items=filteredNearby(base);let shown=items.slice(0,state.nearbyLimit);
   const selected=items.find(p=>p.id===state.selectedId);if(selected&&!shown.includes(selected))shown=[selected,...shown.slice(0,-1)];
   $('#nearbyCount').textContent=`${selectedAnchor()?selectedAnchor().name+(Number($('#radius').value)?'直线 '+Number($('#radius').value)+' 公里内：':'全部参考点：'):'当前显示 '}${items.length} 个地点`;
   $('#nearbyList').innerHTML=shown.length?shown.map(placeCard).join(''):'<div class="privacy-card">当前范围没有匹配地点。可扩大范围或手动选择城市；无坐标的地点仍在全部收藏中。</div>';
@@ -84,16 +106,29 @@ function renderNearby(fit=false){
   $('#areaMapLink').href=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(area+' 日本')}`;
   // Use the full city/category selection for map points; viewport filtering affects cards only.
   const radius=Number($('#radius').value),point=referencePosition();
-  const mapped=nearbyBase().filter(p=>hasCoordinate(p)&&(!radius||!point||distanceKm(point,p.coordinate)<=radius));
-  const unlocated=nearbyBase().filter(p=>!hasCoordinate(p)).length;
+  const mapped=base.filter(p=>hasCoordinate(p)&&(!radius||!point||distanceKm(point,p.coordinate)<=radius));
+  const unlocated=base.filter(p=>!hasCoordinate(p)).length;
   $('#mapHint').textContent=mapped.length?`${mapped.length} 个地点可在地图查看${unlocated?' · '+unlocated+' 个位置待核':''}，点数字放大`:'这组收藏的位置仍待核对，请在下方查看';
   state.map?.update(mapped,{fit,selectedId:state.selectedId});
 }
+function matchesScope(place,scope){
+  if(scope==='visit')return ['景点','散步'].includes(place.category);
+  if(scope==='advance')return ['reserve','blocked'].includes(ticketFor(place)?.status);
+  return true;
+}
 function filteredSaved(){
   const query=$('#savedSearch').value.trim().toLowerCase(),city=$('#savedCity').value,cat=$('#savedCategory').value,mark=$('#savedState').value,origin=$('#savedOrigin').value;
-  return state.data.places.filter(place=>(city==='all'||place.city===city)&&(cat==='all'||place.category===cat)&&(!query||`${place.name} ${place.googleListRecord?.name||''} ${place.japaneseName} ${place.region} ${place.note} ${place.sourceLabel}`.toLowerCase().includes(query))&&(mark==='all'||(mark==='unmarked'?!state.marks[place.id]:state.marks[place.id]===mark))&&(origin==='all'||(origin==='google'?Boolean(place.googleListRecord):origin==='saved'?Boolean(place.localSavedRecord)&&!place.googleListRecord:!place.googleListRecord&&!place.localSavedRecord)));
+  return state.data.places.filter(place=>matchesScope(place,state.savedScope)&&(city==='all'||place.city===city)&&(cat==='all'||place.category===cat)&&(!query||`${place.city} ${place.name} ${place.googleListRecord?.name||''} ${place.japaneseName} ${place.region} ${place.note} ${place.sourceLabel}`.toLowerCase().includes(query))&&(mark==='all'||(mark==='unmarked'?!state.marks[place.id]:state.marks[place.id]===mark))&&(origin==='all'||(origin==='google'?Boolean(place.googleListRecord):origin==='saved'?Boolean(place.localSavedRecord)&&!place.googleListRecord:!place.googleListRecord&&!place.localSavedRecord)));
 }
-function renderSaved(){const items=filteredSaved(),shown=items.slice(0,state.savedLimit);$('#savedCount').textContent=`找到 ${items.length} 个地点`;$('#savedList').innerHTML=shown.length?shown.map(placeCard).join(''):'<div class="privacy-card">没有匹配收藏。</div>';$('#savedMore').hidden=shown.length>=items.length}
+function renderSaved(){
+  const selected=[...$('#savedFilters').querySelectorAll('select')].filter(select=>select.value!=='all');
+  $('#filterToggle').textContent=selected.length?'筛选 · '+selected.length:'筛选';
+  $('#filterToggle').title=selected.map(select=>select.selectedOptions[0].textContent).join(' · ');
+  $('#clearFilters').hidden=!selected.length&&!$('#savedSearch').value&&state.savedScope==='all';
+  for(const button of $('#savedScopes').querySelectorAll('button')){
+    button.setAttribute('aria-pressed',String(button.dataset.scope===state.savedScope));
+  }
+  const items=filteredSaved(),shown=items.slice(0,state.savedLimit);$('#savedCount').textContent=`找到 ${items.length} 个地点`;$('#savedList').innerHTML=shown.length?shown.map(placeCard).join(''):'<div class="privacy-card">没有找到符合条件的地点。可以换个关键词，或清除筛选。</div>';$('#savedMore').hidden=shown.length>=items.length}
 function distanceLabel(place){
   if(!hasCoordinate(place))return '坐标 / 分店待核';
   const point=referencePosition();if(!point)return '有公开参考坐标';
@@ -101,7 +136,7 @@ function distanceLabel(place){
   return distance<1?`直线约 ${Math.round(distance*1000/50)*50} 米`:`直线约 ${distance.toFixed(1)} 公里`;
 }
 const cardSummaries={"太阳之塔":"作者出发前想去，本篇未确认实际到访；开放及预约待核。","出町桝形商店街":"评论者建议与下鸭神社、河合神社及京都御苑连走。","河合神社":"作者喜欢鸭川附近的神社，另一篇评论者推荐与下鸭神社连走。","吉象カレー":"原帖提及京都站附近的咖喱店，地址匹配记录可在详情查看。","建仁寺":"作者实际游览并推荐，可与永观堂按兴趣二选一。","京都 いとおかし":"作者称当时需预约、分量大；现行规则待核。","京の焼肉処 弘 京都駅前店":"作者推荐牛舌和生牛肉，曾未预约入座；现行安排待核。","日之出乌冬面":"作者提及哲学之道附近的乌冬店；实体和营业状态待核。","三年坂":"清水寺至八坂神社间的街区路线。","焼肉 肉どうし 京都西院店":"原帖提及京都西院店；营业时间待核。","下鸭神社":"作者推荐从糺之森慢走入神社；另一篇评论者建议与河合神社连走。","COYOTE the ordinary shop":"作者提及素食吐司与咖啡；地点及开放安排待核。","Kurasu Kyoto Stand":"作者提及水龙头咖啡与手冲；地点及开放安排待核。","すしてつ 先斗町店":"作者提醒在门口白板写名字；当前规则待确认。","やきとり大吉 三条店":"原帖列出三条店，地址匹配记录可在详情查看。","中村藤吉本店":"宇治本店：作者记录等待约四小时，觉得甜品偏甜；不同于平等院店。","Saizeriya":"和歌山市的条目，具体分店与地址待确认。","Prince Smart Inn 大阪淀屋桥":"历史清单已有褒贬备注。","贵志站":"猫猫电车路线地点；此前地图提示无法添加。"};
-function placeCard(place){const mark=state.marks[place.id];return `<article class="place-card ${state.selectedId===place.id?'is-selected':''}" data-id="${place.id}"><div class="place-top"><div><h3>${esc(place.name)}</h3><div class="place-sub">${esc(place.city)} · ${esc(place.region)} · ${esc(place.category)}</div></div><span class="tag ${place.verified?'':'pending'}">${place.verified?'有保存记录':'待确认'}</span></div><p class="place-note">${esc(practicalCardNote(place))}</p>${ticketSummary(place)}<div class="distance">${distanceLabel(place)}</div><div class="card-actions"><button class="detail-btn" data-action="detail">详情</button>${state.map&&hasCoordinate(place)?'<button class="detail-btn" data-action="focus">地图点</button>':''}<a class="map-btn" href="${esc(ticketMapSearch(place))}">Google Maps</a><div class="state-buttons"><button class="state-btn ${mark==='want'?'active':''}" data-action="mark" data-mark="want" aria-label="特别想去" aria-pressed="${mark==='want'}">★</button><button class="state-btn ${mark==='visited'?'active':''}" data-action="mark" data-mark="visited" aria-label="去过" aria-pressed="${mark==='visited'}">✓</button></div></div></article>`}
+function placeCard(place){const mark=state.marks[place.id];return `<article class="place-card ${state.selectedId===place.id?'is-selected':''}" data-id="${place.id}"><div class="place-top"><div><h3><button class="place-title" data-action="detail">${esc(place.name)}</button></h3><div class="place-sub">${esc([place.city, place.region===place.city?'':place.region, place.category].filter(Boolean).join(' · '))}</div></div><span class="tag ${place.verified?'':'pending'}">${place.verified?'有保存记录':'待确认'}</span></div><p class="place-note">${esc(practicalCardNote(place))}</p>${ticketSummary(place)}<div class="distance">${distanceLabel(place)}</div><div class="card-actions">${state.map&&hasCoordinate(place)?'<button class="detail-btn" data-action="focus">地图定位</button>':''}<a class="map-btn" href="${esc(ticketMapSearch(place))}">Google 地图 ↗</a><div class="state-buttons"><button class="state-btn ${mark==='want'?'active':''}" data-action="mark" data-mark="want" aria-label="特别想去" aria-pressed="${mark==='want'}">★</button><button class="state-btn ${mark==='visited'?'active':''}" data-action="mark" data-mark="visited" aria-label="去过" aria-pressed="${mark==='visited'}">✓</button></div></div></article>`}
 function handleCardAction(event){
   const button=event.target.closest('[data-action]');if(!button)return;
   const place=state.data.places.find(p=>p.id===button.closest('[data-id]')?.dataset.id);if(!place)return;
@@ -125,7 +160,17 @@ function selectPlace(id){
 function showDetail(place,focusTickets=false){
   const coordinate=place.coordinate;
   const link=(url,label)=>url?`<a href="${esc(url)}" target="_blank" rel="noopener">${label}</a>`:'';
-  $('#detailContent').innerHTML=`<div class="detail-inner"><button id="closeDetailTop" class="detail-close-top" aria-label="关闭详情">×</button><div class="eyebrow">${esc(place.city)} · ${esc(place.category)}</div><h2>${esc(place.name)}</h2><div class="place-sub">${esc(place.japaneseName||'日文名称待核')}</div>${ticketDetails(place)}<dl><dt>区域</dt><dd>${esc(place.region)}</dd><dt>地址</dt><dd>${esc(place.id==='p099'?'京都市左京区大原来迎院町540（寺院官网地址）':place.address||'尚未核对完整地址，请在 Google Maps 确认')}${place.addressSourceUrl?`<br>${link(place.addressSourceUrl,'地址来源')} · ${esc(place.addressCheckedAt||'日期未记录')}`:''}</dd><dt>收藏备注</dt><dd>${esc(place.id==='p099'?'三千院真实存在且正常开放；旧Google条目“院”的异常仍保留为历史关联问题，不能据此判断寺院关闭。':place.note||'暂无')}</dd><dt>收藏来源</dt><dd>${esc(place.sourceLabel)}；笔记经验不代表实时营业、价格或排队。${link(place.sourceUrl,'原笔记')}</dd><dt>记录状态</dt><dd>${esc(place.id==='p099'?'旧Google条目“院”的关联仍待确认；三千院寺院及票务已按官网另行核实。':place.evidence)}</dd><dt>坐标</dt><dd>${esc(place.coordinateStatus)}${coordinate?`<br>${coordinate.lat}, ${coordinate.lng}<br>${link(coordinate.sourceUrl,'公开资料来源')} · ${esc(coordinate.checkedAt||'日期未记录')} 匹配`:''}</dd>${place.officialUrl?`<dt>官网</dt><dd>${link(place.officialUrl,'查看官方网页')}</dd>`:''}</dl><div class="detail-actions"><a href="${esc(place.mapDirectionsUrl||ticketMapSearch(place))}">${coordinate?'Google 步行路线':'Google 搜索确认'}</a><button id="closeDetail">关闭</button></div></div>`;
+  $('#detailContent').innerHTML=`<div class="detail-inner"><button id="closeDetailTop" class="detail-close-top" aria-label="关闭详情">×</button><div class="eyebrow">${esc(place.city)} · ${esc(place.category)}</div><h2>${esc(place.name)}</h2><div class="place-sub">${esc(place.japaneseName||'日文名称待核')}</div><button id="detailTransit" class="route-action">查乘车路线 <span aria-hidden="true">→</span></button>${ticketDetails(place)}<dl><dt>区域</dt><dd>${esc(place.region)}</dd><dt>地址</dt><dd>${esc(place.id==='p099'?'京都市左京区大原来迎院町540（寺院官网地址）':place.address||'尚未核对完整地址，请在 Google Maps 确认')}${place.addressSourceUrl?`<br>${link(place.addressSourceUrl,'地址来源')} · ${esc(place.addressCheckedAt||'日期未记录')}`:''}</dd><dt>收藏备注</dt><dd>${esc(place.id==='p099'?'三千院真实存在且正常开放；旧Google条目“院”的异常仍保留为历史关联问题，不能据此判断寺院关闭。':place.note||'暂无')}</dd><dt>收藏来源</dt><dd>${esc(place.sourceLabel)}；笔记经验不代表实时营业、价格或排队。${link(place.sourceUrl,'原笔记')}</dd><dt>记录状态</dt><dd>${esc(place.id==='p099'?'旧Google条目“院”的关联仍待确认；三千院寺院及票务已按官网另行核实。':place.evidence)}</dd><dt>坐标</dt><dd>${esc(place.coordinateStatus)}${coordinate?`<br>${coordinate.lat}, ${coordinate.lng}<br>${link(coordinate.sourceUrl,'公开资料来源')} · ${esc(coordinate.checkedAt||'日期未记录')} 匹配`:''}</dd>${place.officialUrl?`<dt>官网</dt><dd>${link(place.officialUrl,'查看官方网页')}</dd>`:''}</dl><div class="detail-actions"><a href="${esc(place.mapDirectionsUrl||ticketMapSearch(place))}">${coordinate?'Google 步行路线':'Google 搜索确认'}</a><button id="closeDetail">关闭</button></div></div>`;
+  $('#detailTransit').onclick=()=>{
+    const destination=new URL(ticketMapSearch(place)).searchParams.get('query')||place.name+' '+place.city+' 日本';
+    const from=$('#routeOrigin'),to=$('#routeDestination');
+    if(!from||!to){window.open('https://www.google.com/maps/dir/?'+new URLSearchParams({api:'1',destination,travelmode:'transit'}),'_blank','noopener');return}
+    if(!from.value.trim())from.value='当前位置';
+    to.value=destination;
+    to.dispatchEvent(new Event('input',{bubbles:true}));
+    $('#detailDialog').close();
+    showView('transitView');
+  };
   $('#detailDialog').showModal();$('#detailDialog').scrollTop=0;$('#closeDetail').onclick=()=>$('#detailDialog').close();$('#closeDetailTop').onclick=()=>$('#detailDialog').close();if(focusTickets)$('#detailContent .ticket-info')?.scrollIntoView({block:'start'});
 }
 function mapFailure(message){$('#mapFallback').hidden=false;$('#mapStatus').textContent=message;$('#loadMapBtn').hidden=false;$('#loadMapBtn').disabled=false;$('#loadMapBtn').textContent='重试地图';state.map?.dispose();state.map=null;$('#viewportFilter').checked=false;$('#viewportFilter').disabled=true;renderNearby();renderSaved()}
