@@ -8,7 +8,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="app.css?v=pocket-20261112">
+  <link rel="stylesheet" href="app.css?v=journey-20261112">
   <link rel="stylesheet" href="map.css">
   <link rel="stylesheet" href="maplibre-gl.css">
   <title>关西口袋收藏</title>
@@ -86,20 +86,50 @@
 
       </section>
 
-      <section id="transitView" class="view" aria-labelledby="transitTitle"><div class="section-head"><div><h2 id="transitTitle">怎么去？</h2></div></div><p class="route-note">正在准备起点和目的地选择…</p></section>
+      <section id="transitView" class="view" aria-labelledby="transitTitle">
+        <div class="section-head"><h2 id="transitTitle">乘车路线</h2></div>
+        <div class="journey route-panel">
+          <label class="route-stop"><span>起点</span><input id="routeOrigin" list="railStops" value="当前位置" placeholder="当前位置、车站或收藏地点" autocomplete="off"></label>
+          <label class="route-stop"><span>终点</span><input id="routeDestination" list="railStops" placeholder="输入车站、酒店或收藏地点" autocomplete="off"></label>
+          <datalist id="railStops"><option value="关西机场站（JR／南海）"></option><option value="京都站（JR）"></option><option value="京都河原町站（阪急）"></option><option value="大阪站（JR）"></option><option value="大阪梅田站（阪急）"></option><option value="南海难波站"></option><option value="大阪难波站（近铁／阪神）"></option><option value="近铁奈良站"></option><option value="JR奈良站"></option><option value="神户三宫站"></option></datalist>
+          <div class="route-tools"><button id="routeHere" type="button">从当前位置出发</button><button id="routeSwap" type="button" disabled>⇄ 对调起终点</button></div>
+          <a id="mapsLink" class="route-go" aria-disabled="true" target="_blank" rel="noopener">请先填写目的地</a>
+        </div>
+        <h3 class="subhead">常用区间</h3><div class="route-presets"><button type="button" data-from="关西机场站（JR／南海）" data-to="京都站（JR）">关西机场 → 京都</button><button type="button" data-from="大阪难波站（近铁／阪神）" data-to="近铁奈良站">大阪难波 → 奈良</button><button type="button" data-from="京都站（JR）" data-to="大阪站（JR）">京都 → 大阪</button></div>
+        <div id="stationNotes" class="field-notes"></div>
+      </section>
 
       <section id="tripView" class="view" aria-labelledby="tripTitle">
-        <div class="section-head"><div><h2 id="tripTitle">出行</h2></div><span id="tripSaveStatus" class="save-state">本机保存</span></div>
-        <p class="intro">记下已定的航班、住宿和预约，保存在当前浏览器。</p>
-        <form id="tripForm" class="trip-form">
-          <label><span>往返航班</span><textarea name="flights" rows="3" placeholder="例：去程航班号、日期、落地机场"></textarea></label>
-          <label><span>住宿</span><textarea name="hotels" rows="3" placeholder="酒店名称、地址、入住日期"></textarea></label>
-          <label><span>已预约</span><textarea name="bookings" rows="3" placeholder="餐厅、展览、交通票等已确认预约"></textarea></label>
-          <label><span>实用准备</span><textarea name="prep" rows="4" placeholder="保险、网络、行李、入境材料等"></textarea></label>
-          <button class="primary-btn" type="submit">保存到本机</button>
-        </form>
-        <div class="privacy-card"><strong>添加到手机桌面</strong><p>iPhone：用 Safari 打开，点“分享”→“添加到主屏幕”。Android：用 Chrome 打开，在菜单选择“添加到主屏幕 / 安装应用”。</p></div>
-        <div class="privacy-card"><strong>数据边界</strong><p>地点状态和出行底卡保存在本机；清浏览器数据前先导出备份。定位只用于本次浏览，不写入出行底卡。</p></div>
+        <div class="section-head"><h2 id="tripTitle">我的出行</h2><button id="tripBackup" class="outline-btn">备份与恢复</button></div>
+        <p class="intro">航班、酒店地址和预约号存在这台设备上。</p>
+        <div class="trip-wallet">
+          <article class="trip-item" data-field="flights">
+            <div class="trip-item-head"><h3>往返航班</h3><button type="button" data-edit aria-expanded="false" aria-controls="edit-flights">填写</button></div>
+            <p class="trip-value"></p><button type="button" data-copy hidden>复制内容</button>
+            <form id="edit-flights" hidden><label><span class="sr-only">往返航班</span><textarea name="flights" rows="4" placeholder="航班号、日期和机场"></textarea></label>
+              <div class="trip-controls"><button type="submit" class="primary-btn">保存</button><button type="button" data-cancel>取消</button></div></form>
+          </article>
+          <article class="trip-item" data-field="hotels">
+            <div class="trip-item-head"><h3>住宿</h3><button type="button" data-edit aria-expanded="false" aria-controls="edit-hotels">填写</button></div>
+            <p class="trip-value"></p><button type="button" data-copy hidden>复制内容</button>
+            <form id="edit-hotels" hidden><label><span class="sr-only">住宿</span><textarea name="hotels" rows="4" placeholder="酒店名称、日文地址和入住日期"></textarea></label>
+              <div class="trip-controls"><button type="submit" class="primary-btn">保存</button><button type="button" data-cancel>取消</button></div></form>
+          </article>
+          <article class="trip-item" data-field="bookings">
+            <div class="trip-item-head"><h3>已预约</h3><button type="button" data-edit aria-expanded="false" aria-controls="edit-bookings">填写</button></div>
+            <p class="trip-value"></p><button type="button" data-copy hidden>复制内容</button>
+            <form id="edit-bookings" hidden><label><span class="sr-only">已预约</span><textarea name="bookings" rows="4" placeholder="预约时间、地点、确认号和取票方式"></textarea></label>
+              <div class="trip-controls"><button type="submit" class="primary-btn">保存</button><button type="button" data-cancel>取消</button></div></form>
+          </article>
+          <article class="trip-item" data-field="prep">
+            <div class="trip-item-head"><h3>出发准备</h3><button type="button" data-edit aria-expanded="false" aria-controls="edit-prep">填写</button></div>
+            <p class="trip-value"></p><button type="button" data-copy hidden>复制内容</button>
+            <form id="edit-prep" hidden><label><span class="sr-only">出发准备</span><textarea name="prep" rows="4" placeholder="网络、行李和出发前要办的事"></textarea></label>
+              <div class="trip-controls"><button type="submit" class="primary-btn">保存</button><button type="button" data-cancel>取消</button></div></form>
+          </article>
+        </div>
+        <p id="tripSaveStatus" role="status" class="status-line"></p>
+        <details class="privacy-card"><summary>换手机或添加到桌面</summary><p>换手机前，点「备份与恢复」导出，随后在新设备打开同一网页并恢复。清理浏览器数据也会清除这些记录。</p><p>Android 可在 Chrome 菜单选「添加到主屏幕」；iPhone 可在 Safari 的分享菜单选「添加到主屏幕」。</p></details>
       </section>
     </main>
 
@@ -113,8 +143,8 @@
 
   <dialog aria-label="地点信息与操作" id="detailDialog" class="detail-dialog"><div id="detailContent"></div></dialog>
   <input id="restoreInput" type="file" accept="application/json" hidden>
-  <script type="module" src="app.js?v=pocket-20261112"></script>
-  <script type="module" src="transit.js?v=pocket-20261112"></script>
+  <script type="module" src="app.js?v=journey-20261112"></script>
+  <script type="module" src="transit.js?v=journey-20261112"></script>
 </body>
 </html>
 

@@ -125,3 +125,34 @@ body {background: var(--paper)}
 .saved-meta .source-archive>summary {padding:7px 2px; font-size:12px}
 .saved-meta .source-archive[open] {width:100%}
 .place-top h3,.detail-inner h2,.detail-inner dd {overflow-wrap:anywhere}
+
+/* Station lookup and trip records */
+.route-panel {display:grid;gap:12px}
+.route-stop {display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:6px;position:relative}
+.route-stop>span {font-size:13px;color:var(--ink-2);font-weight:650}
+.route-stop input,.trip-item textarea {width:100%;font:inherit;font-size:16px;color:var(--ink);border:1px solid var(--line);border-radius:10px;background:#fcfcf6;padding:12px}
+.route-tools,.route-presets,.trip-controls {display:flex;flex-wrap:wrap;gap:8px}
+.route-tools button,.route-presets button,.trip-item button:not(.primary-btn) {min-height:41px;padding:6px 12px;border:1px solid var(--line);background:var(--card);border-radius:9px;color:var(--ink);font:inherit;font-size:13px;cursor:pointer}
+.route-tools button:disabled {color:#667469;background:#eeeFE9;cursor:default}
+.route-go {display:block;padding:13px 10px;background:var(--ink);color:white;border-radius:11px;text-align:center;text-decoration:none;font-weight:650}
+.route-go[aria-disabled=true] {color:#536257;background:#e4e8df}
+.subhead {font-size:16px;margin:20px 0 8px}
+.field-notes {margin:20px 0}
+.field-notes details,#tripView .privacy-card {border-block-start:1px solid var(--line);padding:12px 2px;background:none;border-radius:0}
+.field-notes summary,#tripView summary {cursor:pointer;font-size:15px;font-weight:650}
+.field-notes p,.field-notes li,.field-notes .choice,.field-notes .help-phrase {font-size:14px;line-height:1.7}
+.field-notes ol {padding-left:1.5em}
+.field-notes li+li {margin-top:9px}
+.field-notes a {color:var(--ink);overflow-wrap:anywhere}
+.field-notes .help-phrase {background:#e8eee4;padding:12px;border-radius:10px}
+.field-notes .help-phrase span {display:block}
+.trip-wallet {display:grid;gap:12px}
+.trip-item {border:1px solid var(--line);border-radius:15px;background:var(--card);padding:14px 16px}
+.trip-item-head {display:flex;align-items:center;justify-content:space-between;gap:8px}
+.trip-item h3 {font-size:17px;margin:0}
+.trip-value {white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:1.65;margin:8px 0 12px;user-select:text}
+.trip-value.empty {margin:4px 0;color:var(--muted);font-size:13px}
+.trip-item form {margin-top:10px}
+.trip-controls {margin-top:8px}
+.trip-controls .primary-btn {padding:8px 20px;font-size:14px}
+#tripSaveStatus {margin-top:10px}
