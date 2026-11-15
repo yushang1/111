@@ -4,12 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#143f3b">
-  <meta name="description" content="关西 solo trip 的附近收藏、全部收藏与本机出行底卡">
+  <meta name="description" content="关西收藏地图、中文乘车助手与随身旅行资料">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="app.css?v=journey-20261112">
+  <link rel="stylesheet" href="app.css?v=travel-20261115">
   <link rel="stylesheet" href="map.css">
+  <link rel="stylesheet" href="travel-guide.css?v=travel-20261115">
   <link rel="stylesheet" href="maplibre-gl.css">
   <title>关西口袋收藏</title>
 </head>
@@ -87,49 +88,41 @@
       </section>
 
       <section id="transitView" class="view" aria-labelledby="transitTitle">
-        <div class="section-head"><h2 id="transitTitle">乘车路线</h2></div>
-        <div class="journey route-panel">
-          <label class="route-stop"><span>起点</span><input id="routeOrigin" list="railStops" value="当前位置" placeholder="当前位置、车站或收藏地点" autocomplete="off"></label>
-          <label class="route-stop"><span>终点</span><input id="routeDestination" list="railStops" placeholder="输入车站、酒店或收藏地点" autocomplete="off"></label>
-          <datalist id="railStops"><option value="关西机场站（JR／南海）"></option><option value="京都站（JR）"></option><option value="京都河原町站（阪急）"></option><option value="大阪站（JR）"></option><option value="大阪梅田站（阪急）"></option><option value="南海难波站"></option><option value="大阪难波站（近铁／阪神）"></option><option value="近铁奈良站"></option><option value="JR奈良站"></option><option value="神户三宫站"></option></datalist>
-          <div class="route-tools"><button id="routeHere" type="button">从当前位置出发</button><button id="routeSwap" type="button" disabled>⇄ 对调起终点</button></div>
-          <a id="mapsLink" class="route-go" aria-disabled="true" target="_blank" rel="noopener">请先填写目的地</a>
+        <div class="section-head"><h2 id="transitTitle">乘车助手</h2></div>
+        <p class="travel-lead">查一段路，看懂怎么坐。</p>
+        <div class="travel-guide-layout">
+          <div class="journey route-panel">
+            <label class="route-stop"><span>从</span><input id="routeOrigin" list="railStops" value="当前位置" placeholder="当前位置、车站或收藏地点" autocomplete="off"></label>
+            <label class="route-stop"><span>到</span><input id="routeDestination" list="railStops" placeholder="车站、酒店或收藏地点" autocomplete="off"></label>
+            <datalist id="railStops"><option value="关西机场站（JR／南海）"></option><option value="京都站（JR）"></option><option value="京都河原町站（阪急）"></option><option value="大阪站（JR）"></option><option value="大阪梅田站（阪急）"></option><option value="南海难波站"></option><option value="大阪难波站（近铁／阪神）"></option><option value="近铁奈良站"></option><option value="JR奈良站"></option><option value="神户三宫站"></option></datalist>
+            <div class="route-tools"><button id="routeHere" type="button">当前位置</button><button id="routeHotel" type="button" hidden>回酒店</button><button id="routeSwap" type="button" disabled>⇄ 起终点对调</button></div>
+            <a id="mapsLink" class="route-go" aria-disabled="true" target="_blank" rel="noopener noreferrer">先选一个目的地</a>
+            <p id="routeContext" class="route-context"></p>
+          </div>
+          <div class="guide-column">
+            <div class="guide-tabs" role="tablist" aria-label="乘车指引">
+              <button type="button" id="guide-tickets" role="tab" data-guide="tickets" aria-controls="stationNotes" aria-selected="true">买票刷卡</button>
+              <button type="button" id="guide-board" role="tab" data-guide="board" aria-controls="stationNotes" aria-selected="false" tabindex="-1">看站台屏</button>
+              <button type="button" id="guide-ask" role="tab" data-guide="ask" aria-controls="stationNotes" aria-selected="false" tabindex="-1">问站员</button>
+            </div>
+            <div id="stationNotes" class="guide-panel" role="tabpanel" aria-labelledby="guide-tickets"></div>
+          </div>
         </div>
-        <h3 class="subhead">常用区间</h3><div class="route-presets"><button type="button" data-from="关西机场站（JR／南海）" data-to="京都站（JR）">关西机场 → 京都</button><button type="button" data-from="大阪难波站（近铁／阪神）" data-to="近铁奈良站">大阪难波 → 奈良</button><button type="button" data-from="京都站（JR）" data-to="大阪站（JR）">京都 → 大阪</button></div>
-        <div id="stationNotes" class="field-notes"></div>
       </section>
-
       <section id="tripView" class="view" aria-labelledby="tripTitle">
-        <div class="section-head"><h2 id="tripTitle">我的出行</h2><button id="tripBackup" class="outline-btn">备份与恢复</button></div>
-        <p class="intro">航班、酒店地址和预约号存在这台设备上。</p>
-        <div class="trip-wallet">
-          <article class="trip-item" data-field="flights">
-            <div class="trip-item-head"><h3>往返航班</h3><button type="button" data-edit aria-expanded="false" aria-controls="edit-flights">填写</button></div>
-            <p class="trip-value"></p><button type="button" data-copy hidden>复制内容</button>
-            <form id="edit-flights" hidden><label><span class="sr-only">往返航班</span><textarea name="flights" rows="4" placeholder="航班号、日期和机场"></textarea></label>
-              <div class="trip-controls"><button type="submit" class="primary-btn">保存</button><button type="button" data-cancel>取消</button></div></form>
-          </article>
-          <article class="trip-item" data-field="hotels">
-            <div class="trip-item-head"><h3>住宿</h3><button type="button" data-edit aria-expanded="false" aria-controls="edit-hotels">填写</button></div>
-            <p class="trip-value"></p><button type="button" data-copy hidden>复制内容</button>
-            <form id="edit-hotels" hidden><label><span class="sr-only">住宿</span><textarea name="hotels" rows="4" placeholder="酒店名称、日文地址和入住日期"></textarea></label>
-              <div class="trip-controls"><button type="submit" class="primary-btn">保存</button><button type="button" data-cancel>取消</button></div></form>
-          </article>
-          <article class="trip-item" data-field="bookings">
-            <div class="trip-item-head"><h3>已预约</h3><button type="button" data-edit aria-expanded="false" aria-controls="edit-bookings">填写</button></div>
-            <p class="trip-value"></p><button type="button" data-copy hidden>复制内容</button>
-            <form id="edit-bookings" hidden><label><span class="sr-only">已预约</span><textarea name="bookings" rows="4" placeholder="预约时间、地点、确认号和取票方式"></textarea></label>
-              <div class="trip-controls"><button type="submit" class="primary-btn">保存</button><button type="button" data-cancel>取消</button></div></form>
-          </article>
-          <article class="trip-item" data-field="prep">
-            <div class="trip-item-head"><h3>出发准备</h3><button type="button" data-edit aria-expanded="false" aria-controls="edit-prep">填写</button></div>
-            <p class="trip-value"></p><button type="button" data-copy hidden>复制内容</button>
-            <form id="edit-prep" hidden><label><span class="sr-only">出发准备</span><textarea name="prep" rows="4" placeholder="网络、行李和出发前要办的事"></textarea></label>
-              <div class="trip-controls"><button type="submit" class="primary-btn">保存</button><button type="button" data-cancel>取消</button></div></form>
-          </article>
-        </div>
+        <div class="section-head"><h2 id="tripTitle">随身出行</h2><button id="tripBackup" class="outline-btn">备份</button></div>
+        <div class="wallet-hero"><p class="travel-eyebrow">MY KANSAI JOURNEY</p><h3 id="journeyHeading" class="travel-heading">把确定的事，放在手边</h3><p id="journeySubtitle" class="travel-lead"></p></div>
+        <div class="wallet-toolbar"><h3 id="journeyDateLabel">今天要用</h3><label class="wallet-date"><span>查看日期</span><input id="journeyDate" type="date"></label></div>
+        <div id="journeyNow" class="wallet-grid"></div>
+        <nav class="wallet-shortcuts" aria-label="出行资料"><button type="button" data-jump="flightSection">往返航班</button><button type="button" data-jump="staySection">住宿</button><button type="button" data-jump="bookingSection">预约</button><button type="button" data-jump="prepSection">准备事项</button></nav>
+        <section id="flightSection" class="wallet-section" aria-labelledby="flightTitle"><div class="wallet-section-head"><h3 id="flightTitle">往返航班</h3><button type="button" data-add="flights">＋ 添加</button></div><div id="flightCards" class="wallet-grid"></div></section>
+        <section id="staySection" class="wallet-section" aria-labelledby="stayTitle"><div class="wallet-section-head"><h3 id="stayTitle">住宿</h3><button type="button" data-add="stays">＋ 添加</button></div><div id="stayCards" class="wallet-grid"></div></section>
+        <section id="bookingSection" class="wallet-section" aria-labelledby="bookingTitle"><div class="wallet-section-head"><h3 id="bookingTitle">预约</h3><button type="button" data-add="bookings">＋ 添加</button></div><div id="bookingCards" class="wallet-grid"></div></section>
+        <section id="prepSection" class="wallet-section" aria-labelledby="prepTitle"><div class="wallet-section-head"><h3 id="prepTitle">准备事项 <span id="prepCount"></span></h3></div><div id="journeyTasks"></div><form id="journeyTaskForm" class="wallet-task-form"><label class="sr-only" for="newJourneyTask">新增准备事项</label><input id="newJourneyTask" placeholder="记一件出发前要办的事" maxlength="300" required><button type="submit">添加</button></form></section>
+        <details id="legacyTrip" class="wallet-storage-note" hidden><summary>之前填写的记录</summary><div id="legacyRecords"></div></details>
         <p id="tripSaveStatus" role="status" class="status-line"></p>
-        <details class="privacy-card"><summary>换手机或添加到桌面</summary><p>换手机前，点「备份与恢复」导出，随后在新设备打开同一网页并恢复。清理浏览器数据也会清除这些记录。</p><p>Android 可在 Chrome 菜单选「添加到主屏幕」；iPhone 可在 Safari 的分享菜单选「添加到主屏幕」。</p></details>
+        <textarea id="copyFallback" rows="3" readonly hidden aria-label="复制内容"></textarea>
+        <details class="wallet-storage-note"><summary>保存、换手机与离线查看</summary><p>个人资料仅保存在当前浏览器。换设备前，可通过右上角「备份」导出，之后在新设备打开同一网站恢复。清理浏览器数据会删除本机记录。</p><p>首次联网载入后，可离线打开已缓存的资料与文字指引。实时路线、外部图片和确认链接需要网络。</p><p>手机浏览器菜单可将网站添加到主屏幕。</p></details>
       </section>
     </main>
 
@@ -142,9 +135,14 @@
   </div>
 
   <dialog aria-label="地点信息与操作" id="detailDialog" class="detail-dialog"><div id="detailContent"></div></dialog>
+  <dialog id="journeyEditor" class="wallet-editor" aria-labelledby="journeyEditorTitle">
+    <div class="wallet-editor-head"><h3 id="journeyEditorTitle">编辑资料</h3><button type="button" data-close-journey aria-label="关闭编辑">×</button></div>
+    <form id="journeyEditForm"><div id="journeyEditorFields"></div><p id="journeyEditorError" class="wallet-editor-error" role="alert"></p><div class="wallet-editor-actions"><button id="journeyDelete" type="button" hidden>删除</button><button type="button" data-close-journey>取消</button><button type="submit">保存</button></div></form>
+  </dialog>
+  <dialog id="stationPhraseDialog" class="wallet-editor" aria-label="给站员看的日文问路卡"><div id="stationPhraseContent" class="station-fullscreen"></div></dialog>
   <input id="restoreInput" type="file" accept="application/json" hidden>
-  <script type="module" src="app.js?v=journey-20261112"></script>
-  <script type="module" src="transit.js?v=journey-20261112"></script>
+  <script type="module" src="app.js?v=travel-20261115"></script>
+  <script type="module" src="transit-guide.js?v=travel-20261115"></script>
 </body>
 </html>
 

@@ -1,3 +1,4 @@
+import {setupJourney,renderJourney,getJourneyData,sanitizeJourneyData} from './journey.js?v=travel-20261115';
 import {hasCoordinate,distanceKm,orderedPlaces,withinBounds} from './geo.mjs';
 import {createFreeMap,mapCategory} from './free-map.mjs';
 
@@ -197,74 +198,23 @@ function locate(){
     line.textContent='已定位。按参考坐标计算直线距离；无坐标地点排在后面，位置仅用于本次会话。';renderNearby();renderSaved();
   },error=>{line.textContent=error.code===1?'定位被拒绝。手动选城市、街区或车站仍可浏览。':'暂时无法取得位置，请手动选区域。'},{enableHighAccuracy:false,timeout:8000,maximumAge:300000});
 }
-function restoreTrip(){
-  const trip=readLocal('kansai-trip-card');
-  for(const card of document.querySelectorAll('.trip-item')){
-    const value=typeof trip[card.dataset.field]==='string'?trip[card.dataset.field]:'';
-    const present=Boolean(value.trim());
-    card.querySelector('.trip-value').textContent=present?value:'尚未填写';
-    card.querySelector('.trip-value').classList.toggle('empty',!present);
-    card.querySelector('[data-edit]').textContent=present?'编辑':'填写';
-    card.querySelector('[data-copy]').hidden=!present;
-    card.querySelector('[data-edit]').hidden=false;
-    card.querySelector('[data-edit]').setAttribute('aria-expanded','false');
-    card.querySelector('form').hidden=true;
-    card.querySelector('.trip-value').hidden=false;
-  }
-}
-function setupTrip(){
-  const status=$('#tripSaveStatus');
-  for(const card of document.querySelectorAll('.trip-item')){
-    const form=card.querySelector('form'),editor=form.querySelector('textarea');
-    const edit=card.querySelector('[data-edit]'),copy=card.querySelector('[data-copy]');
-    const value=card.querySelector('.trip-value'),key=card.dataset.field;
-    function setEditing(active){
-      form.hidden=!active;
-      value.hidden=active;
-      copy.hidden=active||value.classList.contains('empty');
-      edit.hidden=active;
-      edit.setAttribute('aria-expanded',String(active));
-      (active?editor:edit).focus();
-    }
-    edit.onclick=()=>{
-      editor.value=readLocal('kansai-trip-card')[key]||'';
-      status.textContent='';
-      setEditing(true);
-    };
-    card.querySelector('[data-cancel]').onclick=()=>setEditing(false);
-    form.onsubmit=event=>{
-      event.preventDefault();
-      const trip=readLocal('kansai-trip-card');
-      trip[key]=editor.value;
-      if(!writeLocal('kansai-trip-card',trip))return;
-      const present=Boolean(editor.value.trim());
-      value.textContent=present?editor.value:'尚未填写';
-      value.classList.toggle('empty',!present);
-      edit.textContent=present?'编辑':'填写';
-      setEditing(false);
-      status.textContent=card.querySelector('h3').textContent+'已保存到本机';
-    };
-    copy.onclick=async()=>{
-      try{await navigator.clipboard.writeText(value.textContent);status.textContent='已复制'+card.querySelector('h3').textContent}
-      catch{const range=document.createRange();range.selectNodeContents(value);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);status.textContent='已选中内容，请使用系统复制'}
-    };
-  }
-  $('#tripBackup').onclick=showBackup;
-  restoreTrip();
-}
+function restoreTrip(){renderJourney()}
+function setupTrip(){setupJourney({onBackup:showBackup,onRoute:address=>{$('#routeDestination').value=address;$('#routeOrigin').value='当前位置';$('#routeDestination').dispatchEvent(new Event('input',{bubbles:true}));showView('transitView');$('#routeDestination').focus()}})}
 function showBackup(){
-  $('#detailContent').innerHTML='<div class="detail-inner backup-sheet"><div class="eyebrow">本机数据</div><h2>备份与恢复</h2><p class="intro">导出包含地点标记和出行底卡。恢复会替换这两类本机数据。</p><button id="exportBackup" class="primary-btn">导出 JSON 备份</button><button id="importBackup">从备份恢复</button><button id="closeBackup">取消</button></div>';
+  $('#detailContent').innerHTML='<div class="detail-inner backup-sheet"><div class="eyebrow">本机数据</div><h2>备份与恢复</h2><p class="intro">导出包含地点标记、航班、住宿、预约、准备事项和之前填写的记录。恢复会替换本机现有记录。</p><button id="exportBackup" class="primary-btn">导出 JSON 备份</button><button id="importBackup">从备份恢复</button><button id="closeBackup">取消</button></div>';
   $('#detailDialog').showModal();$('#closeBackup').onclick=()=>$('#detailDialog').close();$('#importBackup').onclick=()=>$('#restoreInput').click();$('#exportBackup').onclick=exportBackup;
 }
-function exportBackup(){const payload={schema:1,exportedAt:new Date().toISOString(),marks:state.marks,trip:readLocal('kansai-trip-card')};const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));const anchor=document.createElement('a');anchor.href=url;anchor.download='kansai-pocket-backup.json';anchor.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function exportBackup(){const payload={schema:2,exportedAt:new Date().toISOString(),marks:state.marks,trip:readLocal('kansai-trip-card'),journey:getJourneyData()};const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));const anchor=document.createElement('a');anchor.href=url;anchor.download='kansai-pocket-backup.json';anchor.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function restoreBackup(event){
   const file=event.target.files[0];if(!file)return;if(file.size>1000000){alert('备份文件过大，请选择此应用导出的 JSON。');return}
   const reader=new FileReader();reader.onload=()=>{try{
-    const payload=JSON.parse(reader.result);if(payload.schema!==1||!payload.marks||typeof payload.marks!=='object')throw Error('schema');
+    const payload=JSON.parse(reader.result);if(![1,2].includes(payload.schema)||!payload.marks||typeof payload.marks!=='object'||Array.isArray(payload.marks))throw Error('schema');
     if(!state.data){alert('请等地点清单加载后再恢复备份。');return}
     const marks={};for(const place of state.data.places)if(['want','visited'].includes(payload.marks[place.id]))marks[place.id]=payload.marks[place.id];
     const trip={};for(const key of ['flights','hotels','bookings','prep'])if(typeof payload.trip?.[key]==='string')trip[key]=payload.trip[key].slice(0,10000);
-    state.marks=marks;writeLocal('kansai-marks',marks);writeLocal('kansai-trip-card',trip);restoreTrip();renderNearby();renderSaved();$('#detailDialog').close();
+    if(payload.schema===2&&(!payload.journey||typeof payload.journey!=='object'))throw Error('journey');
+    if(!writeLocal('kansai-marks',marks)||!writeLocal('kansai-trip-card',trip)||!writeLocal('kansai-journey-v2',sanitizeJourneyData(payload.schema===2?payload.journey:{})))return;
+    state.marks=marks;restoreTrip();renderNearby();renderSaved();$('#detailDialog').close();
   }catch{alert('无法读取这个备份文件')}};reader.readAsText(file);event.target.value='';
 }
 document.querySelectorAll('.bottom-nav button').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.view)));
