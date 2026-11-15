@@ -1,3 +1,4 @@
+import {FOOD_BOOKINGS} from './food-booking.mjs?v=food-20261115';
 import {setupJourney,renderJourney,getJourneyData,sanitizeJourneyData} from './journey.js?v=travel-20261115';
 import {hasCoordinate,distanceKm,orderedPlaces,withinBounds} from './geo.mjs';
 import {createFreeMap,mapCategory} from './free-map.mjs';
@@ -22,6 +23,19 @@ function ticketDetails(place){
 function ticketMapSearch(place){return place.id==='p099'?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('三千院 京都市左京区大原来迎院町540'):place.mapSearchUrl}
 function practicalCardNote(place){return place.id==='p099'?'大原三千院正常开放，普通参观现场买票；旧地图条目异常不代表寺院不存在。':(typeof cardSummaries==='undefined'?null:cardSummaries[place.name])||place.note||'暂无实用备注'}
 // TICKET_HELPERS_END
+// 餐饮预约：没有证据的条目明确标记待核实。
+const FOOD_LABELS={reserve:'需预约',recommended:'建议预约',optional:'可预约',walkin:'直接去 / 不接受预约',queue:'当日领号',check:'预约待核实'};
+function foodFor(place){
+  if(!['吃饭','咖啡'].includes(place.category))return null;
+  return FOOD_BOOKINGS[place.id]||{status:'check',detail:'这家店的预约规则尚未核实。请先确认具体店名、分店与营业情况，再查看门店资料。'};
+}
+function foodSummary(place){const f=foodFor(place);if(!f)return '';return `<button class="food-summary ${esc(f.status)}" data-action="food" aria-label="${esc(place.name)}的用餐预约：${esc(FOOD_LABELS[f.status])}"><span>用餐预约</span><strong>${esc(FOOD_LABELS[f.status])} <span aria-hidden="true">›</span></strong></button>`}
+function foodDetails(place){
+  const f=foodFor(place);if(!f)return '';
+  const link=(url,label)=>`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a>`;
+  return `<section class="food-info ${esc(f.status)}" tabindex="-1" aria-label="用餐预约"><div class="food-info-head"><h3>用餐预约</h3><strong>${esc(FOOD_LABELS[f.status])}</strong></div><p>${esc(f.detail)}</p>${f.booking?`<p class="food-action">${link(f.booking,'查看预约入口')}</p>`:''}${f.source&&f.source!==f.booking?`<p class="food-source">${link(f.source,f.sourceLabel||'查看资料来源')}</p>`:''}<p class="food-checked">${f.checked?`核对 ${esc(f.checked)} · ${esc(f.sourceLabel||'门店资料')} · `:''}规则、空位与营业情况可能变化，出发前以门店最新信息为准。</p></section>`;
+}
+
 
 const CATEGORIES=['全部','吃饭','咖啡','景点','散步','购物','住宿'];
 const $=selector=>document.querySelector(selector);
@@ -55,7 +69,7 @@ function bind(){
   $('#radius').addEventListener('change',()=>{state.nearbyLimit=12;renderNearby(true)});
   $('#viewportFilter').addEventListener('change',()=>{state.nearbyLimit=12;renderNearby()});
   $('#nearbyMore').addEventListener('click',()=>{state.nearbyLimit+=12;renderNearby()});
-  for(const id of ['savedSearch','savedCity','savedCategory','savedState','savedOrigin'])$('#'+id).addEventListener(id==='savedSearch'?'input':'change',()=>{state.savedLimit=24;renderSaved()});
+  for(const id of ['savedSearch','savedCity','savedCategory','savedState','savedOrigin','savedFoodBooking'])$('#'+id).addEventListener(id==='savedSearch'?'input':'change',()=>{state.savedLimit=24;renderSaved()});
   $('#savedScopes').addEventListener('click',event=>{
     const button=event.target.closest('[data-scope]');
     if(!button)return;
@@ -123,8 +137,8 @@ function matchesScope(place,scope){
   return true;
 }
 function filteredSaved(){
-  const query=$('#savedSearch').value.trim().toLowerCase(),city=$('#savedCity').value,cat=$('#savedCategory').value,mark=$('#savedState').value,origin=$('#savedOrigin').value;
-  return state.data.places.filter(place=>matchesScope(place,state.savedScope)&&(city==='all'||place.city===city)&&(cat==='all'||place.category===cat)&&(!query||`${place.city} ${place.name} ${place.googleListRecord?.name||''} ${place.japaneseName} ${place.region} ${place.note} ${place.sourceLabel}`.toLowerCase().includes(query))&&(mark==='all'||(mark==='unmarked'?!state.marks[place.id]:state.marks[place.id]===mark))&&(origin==='all'||(origin==='google'?Boolean(place.googleListRecord):origin==='saved'?Boolean(place.localSavedRecord)&&!place.googleListRecord:!place.googleListRecord&&!place.localSavedRecord)));
+  const query=$('#savedSearch').value.trim().toLowerCase(),city=$('#savedCity').value,cat=$('#savedCategory').value,mark=$('#savedState').value,origin=$('#savedOrigin').value,foodStatus=$('#savedFoodBooking').value;
+  return state.data.places.filter(place=>matchesScope(place,state.savedScope)&&(foodStatus==='all'||foodFor(place)?.status===foodStatus)&&(city==='all'||place.city===city)&&(cat==='all'||place.category===cat)&&(!query||`${place.city} ${place.name} ${place.googleListRecord?.name||''} ${place.japaneseName} ${place.region} ${place.note} ${place.sourceLabel}`.toLowerCase().includes(query))&&(mark==='all'||(mark==='unmarked'?!state.marks[place.id]:state.marks[place.id]===mark))&&(origin==='all'||(origin==='google'?Boolean(place.googleListRecord):origin==='saved'?Boolean(place.localSavedRecord)&&!place.googleListRecord:!place.googleListRecord&&!place.localSavedRecord)));
 }
 function renderSaved(){
   const selected=[...$('#savedFilters').querySelectorAll('select')].filter(select=>select.value!=='all');
@@ -141,14 +155,15 @@ function distanceLabel(place){
   const distance=distanceKm(point,place.coordinate);
   return distance<1?`直线约 ${Math.round(distance*1000/50)*50} 米`:`直线约 ${distance.toFixed(1)} 公里`;
 }
-const cardSummaries={"太阳之塔":"作者出发前想去，本篇未确认实际到访；开放及预约待核。","出町桝形商店街":"评论者建议与下鸭神社、河合神社及京都御苑连走。","河合神社":"作者喜欢鸭川附近的神社，另一篇评论者推荐与下鸭神社连走。","吉象カレー":"原帖提及京都站附近的咖喱店，地址匹配记录可在详情查看。","建仁寺":"作者实际游览并推荐，可与永观堂按兴趣二选一。","京都 いとおかし":"作者称当时需预约、分量大；现行规则待核。","京の焼肉処 弘 京都駅前店":"作者推荐牛舌和生牛肉，曾未预约入座；现行安排待核。","日之出乌冬面":"作者提及哲学之道附近的乌冬店；实体和营业状态待核。","三年坂":"清水寺至八坂神社间的街区路线。","焼肉 肉どうし 京都西院店":"原帖提及京都西院店；营业时间待核。","下鸭神社":"作者推荐从糺之森慢走入神社；另一篇评论者建议与河合神社连走。","COYOTE the ordinary shop":"作者提及素食吐司与咖啡；地点及开放安排待核。","Kurasu Kyoto Stand":"作者提及水龙头咖啡与手冲；地点及开放安排待核。","すしてつ 先斗町店":"作者提醒在门口白板写名字；当前规则待确认。","やきとり大吉 三条店":"原帖列出三条店，地址匹配记录可在详情查看。","中村藤吉本店":"宇治本店：作者记录等待约四小时，觉得甜品偏甜；不同于平等院店。","Saizeriya":"和歌山市的条目，具体分店与地址待确认。","Prince Smart Inn 大阪淀屋桥":"历史清单已有褒贬备注。","贵志站":"猫猫电车路线地点；此前地图提示无法添加。"};
-function placeCard(place){const mark=state.marks[place.id];return `<article class="place-card ${state.selectedId===place.id?'is-selected':''}" data-id="${place.id}"><div class="place-top"><div><h3><button class="place-title" data-action="detail">${esc(place.name)}</button></h3><div class="place-sub">${esc([place.city, place.region===place.city?'':place.region, place.category].filter(Boolean).join(' · '))}</div></div><span class="tag ${place.verified?'':'pending'}">${place.verified?'有保存记录':'待确认'}</span></div><p class="place-note">${esc(practicalCardNote(place))}</p>${ticketSummary(place)}<div class="distance">${distanceLabel(place)}</div><div class="card-actions">${state.map&&hasCoordinate(place)?'<button class="detail-btn" data-action="focus">地图定位</button>':''}<a class="map-btn" href="${esc(ticketMapSearch(place))}">Google 地图 ↗</a><div class="state-buttons"><button class="state-btn ${mark==='want'?'active':''}" data-action="mark" data-mark="want" aria-label="特别想去" aria-pressed="${mark==='want'}">★</button><button class="state-btn ${mark==='visited'?'active':''}" data-action="mark" data-mark="visited" aria-label="去过" aria-pressed="${mark==='visited'}">✓</button></div></div></article>`}
+const cardSummaries={"WIFE & HUSBAND":"店内咖啡与野餐分开预约；详情可查看最新规则与入口。","太阳之塔":"作者出发前想去，本篇未确认实际到访；开放及预约待核。","出町桝形商店街":"评论者建议与下鸭神社、河合神社及京都御苑连走。","河合神社":"作者喜欢鸭川附近的神社，另一篇评论者推荐与下鸭神社连走。","吉象カレー":"原帖提及京都站附近的咖喱店，地址匹配记录可在详情查看。","建仁寺":"作者实际游览并推荐，可与永观堂按兴趣二选一。","京都 いとおかし":"作者称当时需预约、分量大；现行规则待核。","京の焼肉処 弘 京都駅前店":"作者推荐牛舌和生牛肉，曾未预约入座；现行安排待核。","日之出乌冬面":"作者提及哲学之道附近的乌冬店；实体和营业状态待核。","三年坂":"清水寺至八坂神社间的街区路线。","焼肉 肉どうし 京都西院店":"原帖提及京都西院店；营业时间待核。","下鸭神社":"作者推荐从糺之森慢走入神社；另一篇评论者建议与河合神社连走。","COYOTE the ordinary shop":"作者提及素食吐司与咖啡；地点及开放安排待核。","Kurasu Kyoto Stand":"作者提及水龙头咖啡与手冲；地点及开放安排待核。","すしてつ 先斗町店":"作者提醒在门口白板写名字；当前规则待确认。","やきとり大吉 三条店":"原帖列出三条店，地址匹配记录可在详情查看。","中村藤吉本店":"宇治本店：作者记录等待约四小时，觉得甜品偏甜；不同于平等院店。","Saizeriya":"和歌山市的条目，具体分店与地址待确认。","Prince Smart Inn 大阪淀屋桥":"历史清单已有褒贬备注。","贵志站":"猫猫电车路线地点；此前地图提示无法添加。"};
+function placeCard(place){const mark=state.marks[place.id];return `<article class="place-card ${state.selectedId===place.id?'is-selected':''}" data-id="${place.id}"><div class="place-top"><div><h3><button class="place-title" data-action="detail">${esc(place.name)}</button></h3><div class="place-sub">${esc([place.city, place.region===place.city?'':place.region, place.category].filter(Boolean).join(' · '))}</div></div><span class="tag ${place.verified?'':'pending'}">${place.verified?'有保存记录':'待确认'}</span></div><p class="place-note">${esc(practicalCardNote(place))}</p>${ticketSummary(place)}${foodSummary(place)}<div class="distance">${distanceLabel(place)}</div><div class="card-actions">${state.map&&hasCoordinate(place)?'<button class="detail-btn" data-action="focus">地图定位</button>':''}<a class="map-btn" href="${esc(ticketMapSearch(place))}">Google 地图 ↗</a><div class="state-buttons"><button class="state-btn ${mark==='want'?'active':''}" data-action="mark" data-mark="want" aria-label="特别想去" aria-pressed="${mark==='want'}">★</button><button class="state-btn ${mark==='visited'?'active':''}" data-action="mark" data-mark="visited" aria-label="去过" aria-pressed="${mark==='visited'}">✓</button></div></div></article>`}
 function handleCardAction(event){
   const button=event.target.closest('[data-action]');if(!button)return;
   const place=state.data.places.find(p=>p.id===button.closest('[data-id]')?.dataset.id);if(!place)return;
   const action=button.dataset.action;
   if(action==='detail'){state.selectedId=place.id;state.map?.update(nearbyBase(),{selectedId:place.id});showDetail(place)}
   if(action==='ticket'){showDetail(place,true)}
+  if(action==='food'){showDetail(place,false,true)}
   if(action==='focus'){
     state.nearbyCity=place.city;$('#nearbyCity').value=place.city;$('#areaQuery').value='';$('#radius').value='0';$('#viewportFilter').checked=false;
     state.nearbyCategory='全部';document.querySelectorAll('#nearbyCategories button').forEach(b=>{const active=b.dataset.category==='全部';b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
@@ -163,10 +178,11 @@ function selectPlace(id){
   renderNearby();
   $(`#nearbyList [data-id="${id}"]`)?.scrollIntoView({block:'center',behavior:'smooth'});
 }
-function showDetail(place,focusTickets=false){
+function showDetail(place,focusTickets=false,focusFood=false){
   const coordinate=place.coordinate;
   const link=(url,label)=>url?`<a href="${esc(url)}" target="_blank" rel="noopener">${label}</a>`:'';
-  $('#detailContent').innerHTML=`<div class="detail-inner"><button id="closeDetailTop" class="detail-close-top" aria-label="关闭详情">×</button><div class="eyebrow">${esc(place.city)} · ${esc(place.category)}</div><h2>${esc(place.name)}</h2><div class="place-sub">${esc(place.japaneseName||'日文名称待核')}</div><button id="detailTransit" class="route-action">查乘车路线 <span aria-hidden="true">→</span></button>${ticketDetails(place)}<dl><dt>区域</dt><dd>${esc(place.region)}</dd><dt>地址</dt><dd>${esc(place.id==='p099'?'京都市左京区大原来迎院町540（寺院官网地址）':place.address||'尚未核对完整地址，请在 Google Maps 确认')}${place.addressSourceUrl?`<br>${link(place.addressSourceUrl,'地址来源')} · ${esc(place.addressCheckedAt||'日期未记录')}`:''}</dd><dt>收藏备注</dt><dd>${esc(place.id==='p099'?'三千院真实存在且正常开放；旧Google条目“院”的异常仍保留为历史关联问题，不能据此判断寺院关闭。':place.note||'暂无')}</dd><dt>收藏来源</dt><dd>${esc(place.sourceLabel)}；笔记经验不代表实时营业、价格或排队。${link(place.sourceUrl,'原笔记')}</dd><dt>记录状态</dt><dd>${esc(place.id==='p099'?'旧Google条目“院”的关联仍待确认；三千院寺院及票务已按官网另行核实。':place.evidence)}</dd><dt>坐标</dt><dd>${esc(place.coordinateStatus)}${coordinate?`<br>${coordinate.lat}, ${coordinate.lng}<br>${link(coordinate.sourceUrl,'公开资料来源')} · ${esc(coordinate.checkedAt||'日期未记录')} 匹配`:''}</dd>${place.officialUrl?`<dt>官网</dt><dd>${link(place.officialUrl,'查看官方网页')}</dd>`:''}</dl><div class="detail-actions"><a href="${esc(place.mapDirectionsUrl||ticketMapSearch(place))}">${coordinate?'Google 步行路线':'Google 搜索确认'}</a><button id="closeDetail">关闭</button></div></div>`;
+  $('#detailContent').innerHTML=`<div class="detail-inner"><button id="closeDetailTop" class="detail-close-top" aria-label="关闭详情">×</button><div class="eyebrow">${esc(place.city)} · ${esc(place.category)}</div><h2>${esc(place.name)}</h2><div class="place-sub">${esc(place.japaneseName||'日文名称待核')}</div><button id="detailTransit" class="route-action">查乘车路线 <span aria-hidden="true">→</span></button>${ticketDetails(place)}${foodDetails(place)}<dl><dt>区域</dt><dd>${esc(place.region)}</dd><dt>地址</dt><dd>${esc(place.id==='p099'?'京都市左京区大原来迎院町540（寺院官网地址）':place.address||'尚未核对完整地址，请在 Google Maps 确认')}${place.addressSourceUrl?`<br>${link(place.addressSourceUrl,'地址来源')} · ${esc(place.addressCheckedAt||'日期未记录')}`:''}</dd><dt>收藏备注</dt><dd>${esc(place.id==='p099'?'三千院真实存在且正常开放；旧Google条目“院”的异常仍保留为历史关联问题，不能据此判断寺院关闭。':place.note||'暂无')}</dd><dt>收藏来源</dt><dd>${esc(place.sourceLabel)}；笔记经验不代表实时营业、价格或排队。${link(place.sourceUrl,'原笔记')}</dd><dt>记录状态</dt><dd>${esc(place.id==='p099'?'旧Google条目“院”的关联仍待确认；三千院寺院及票务已按官网另行核实。':place.evidence)}</dd><dt>坐标</dt><dd>${esc(place.coordinateStatus)}${coordinate?`<br>${coordinate.lat}, ${coordinate.lng}<br>${link(coordinate.sourceUrl,'公开资料来源')} · ${esc(coordinate.checkedAt||'日期未记录')} 匹配`:''}</dd>${place.officialUrl?`<dt>官网</dt><dd>${link(place.officialUrl,'查看官方网页')}</dd>`:''}</dl><div class="detail-actions"><a href="${esc(place.mapDirectionsUrl||ticketMapSearch(place))}">${coordinate?'Google 步行路线':'Google 搜索确认'}</a><button id="closeDetail">关闭</button></div></div>`;
+  if(focusFood) requestAnimationFrame(()=>document.querySelector('.food-info')?.focus());
   $('#detailTransit').onclick=()=>{
     const destination=new URL(ticketMapSearch(place)).searchParams.get('query')||place.name+' '+place.city+' 日本';
     const from=$('#routeOrigin'),to=$('#routeDestination');

@@ -156,3 +156,8 @@ body {background: var(--paper)}
 .trip-controls {margin-top:8px}
 .trip-controls .primary-btn {padding:8px 20px;font-size:14px}
 #tripSaveStatus {margin-top:10px}
+
+/* Dining reservation guidance stays on the place card and in its details. */
+.food-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:44px;margin:0 0 8px;padding:10px 11px;border:1px solid #dfd9ca;border-radius:11px;background:#f8f4e9;color:#71592e;text-align:left;font-size:13px;cursor:pointer}
+.food-summary strong{font-size:14px}.food-summary.walkin,.food-summary.queue{background:#eff5ee;border-color:#d6e4d5;color:#45634b}.food-summary.check{background:#f3f2ef;border-color:#e3e1dc;color:#625e55}.food-summary.reserve,.food-summary.recommended{background:#fff0df;border-color:#eed0ad;color:#875025}
+.food-info{margin:12px 0 18px;padding:14px;border:1px solid #dfd9ca;border-radius:14px;background:#fbf8f0}.food-info-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.food-info-head h3{margin:0;font-size:18px}.food-info-head strong{font-size:13px;color:#735724;text-align:right}.food-info p{font-size:14px;line-height:1.65}.food-action a{display:inline-block;padding:9px 12px;border-radius:9px;background:#405f4b;color:#fff;font-weight:600;text-decoration:none}.food-source a{font-size:13px}.food-checked{font-size:12px!important;color:#686b64}
