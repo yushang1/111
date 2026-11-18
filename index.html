@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="app.css?v=food-20261115">
   <link rel="stylesheet" href="map.css">
-  <link rel="stylesheet" href="travel-guide.css?v=travel-20261115">
+  <link rel="stylesheet" href="travel-guide.css?v=transit-20261118">
   <link rel="stylesheet" href="maplibre-gl.css">
   <title>关西口袋收藏</title>
 </head>
@@ -111,24 +111,25 @@
         <p class="travel-lead">查一段路，看懂怎么坐。</p>
         <div class="travel-guide-layout">
           <div class="journey route-panel">
-            <label class="route-stop"><span>从</span><input id="routeOrigin" list="railStops" value="当前位置" placeholder="当前位置、车站或收藏地点" autocomplete="off"></label>
-            <label class="route-stop"><span>到</span><input id="routeDestination" list="railStops" placeholder="车站、酒店或收藏地点" autocomplete="off"></label>
-            <datalist id="railStops"><option value="关西机场站（JR／南海）"></option><option value="京都站（JR）"></option><option value="京都河原町站（阪急）"></option><option value="大阪站（JR）"></option><option value="大阪梅田站（阪急）"></option><option value="南海难波站"></option><option value="大阪难波站（近铁／阪神）"></option><option value="近铁奈良站"></option><option value="JR奈良站"></option><option value="神户三宫站"></option></datalist>
-            <div class="route-tools"><button id="routeHere" type="button">当前位置</button><button id="routeHotel" type="button" hidden>回酒店</button><button id="routeSwap" type="button" disabled>⇄ 起终点对调</button></div>
+            <div class="route-stop"><label for="routeOrigin">从</label><input id="routeOrigin" placeholder="当前位置（由 Google 地图定位）" aria-describedby="routeLocationNote" autocomplete="off"><button type="button" class="route-pick" data-route-pick="routeOrigin" aria-label="选择起点">选择</button></div>
+            <div class="route-stop"><label for="routeDestination">到</label><input id="routeDestination" placeholder="输入车站、酒店或地点" autocomplete="off"><button type="button" class="route-pick" data-route-pick="routeDestination" aria-label="选择终点">选择</button></div>
+            <datalist id="railStops"><option value="关西机场站（JR／南海）"></option><option value="京都站（JR）"></option><option value="京都河原町站（阪急）"></option><option value="大阪站（JR）"></option><option value="大阪梅田站（阪急）"></option><option value="南海难波站"></option><option value="大阪难波站（近铁／阪神）"></option><option value="JR难波站"></option><option value="近铁奈良站"></option><option value="JR奈良站"></option><option value="神户三宫站"></option></datalist>
+            <div class="route-tools"><button id="routeHotel" type="button" hidden>回酒店</button><button id="routeSwap" type="button" disabled>⇄ 起终点对调</button></div>
+            <p id="routeLocationNote" class="route-context">起点留空时，打开 Google 地图后由它尝试定位。若未授权定位或定位不可用，请手动选起点；本页不读取你的位置。</p>
             <a id="mapsLink" class="route-go" aria-disabled="true" target="_blank" rel="noopener noreferrer">先选一个目的地</a>
             <p id="routeContext" class="route-context"></p>
             <details class="privacy-card">
               <summary>选对车站：难波与京都河原町</summary>
               <p><strong>难波：</strong>南海难波是南海机场线用站；大阪难波是近铁、阪神用站；JR 难波另有站点。查路线时带上运营商，换乘要预留步行时间。</p>
               <p><strong>京都：</strong>阪急京都河原町在四条河原町一带，不是 JR 京都站。目的地是新干线或 JR 站区时，选「京都站（JR）」。</p>
-              <p><a href="https://www.nankai.co.jp/traffic/kix.html" target="_blank" rel="noopener noreferrer">南海机场指南</a> · <a href="https://www.kintetsu.co.jp/soukatsu/kounai/nanba.html" target="_blank" rel="noopener noreferrer">近铁难波换乘图</a> · <a href="https://ja.kyoto.travel/feature/traffic/train.php" target="_blank" rel="noopener noreferrer">京都市乘车指南</a></p>
+              <p><a href="https://www.nankai.co.jp/traffic/kix.html" target="_blank" rel="noopener noreferrer">南海机场指南</a> · <a href="https://www.kintetsu.co.jp/foreign/chinese-kan/about/station/yard/namba.html" target="_blank" rel="noopener noreferrer">大阪难波站内图（简体中文）</a> · <a href="https://ja.kyoto.travel/feature/traffic/train.php" target="_blank" rel="noopener noreferrer">京都市乘车指南</a></p>
             </details>
           </div>
           <div class="guide-column">
             <div class="guide-tabs" role="tablist" aria-label="乘车指引">
               <button type="button" id="guide-tickets" role="tab" data-guide="tickets" aria-controls="stationNotes" aria-selected="true">买票刷卡</button>
               <button type="button" id="guide-board" role="tab" data-guide="board" aria-controls="stationNotes" aria-selected="false" tabindex="-1">看站台屏</button>
-              <button type="button" id="guide-ask" role="tab" data-guide="ask" aria-controls="stationNotes" aria-selected="false" tabindex="-1">问站员</button>
+              <button type="button" id="guide-ask" role="tab" data-guide="ask" aria-controls="stationNotes" aria-selected="false" tabindex="-1">请站员指路</button>
             </div>
             <div id="stationNotes" class="guide-panel" role="tabpanel" aria-labelledby="guide-tickets"></div>
           </div>
@@ -174,10 +175,20 @@
     <div class="wallet-editor-head"><h3 id="journeyEditorTitle">编辑资料</h3><button type="button" data-close-journey aria-label="关闭编辑">×</button></div>
     <form id="journeyEditForm"><div id="journeyEditorFields"></div><p id="journeyEditorError" class="wallet-editor-error" role="alert"></p><div class="wallet-editor-actions"><button id="journeyDelete" type="button" hidden>删除</button><button type="button" data-close-journey>取消</button><button type="submit">保存</button></div></form>
   </dialog>
-  <dialog id="stationPhraseDialog" class="wallet-editor" aria-label="给站员看的日文问路卡"><div id="stationPhraseContent" class="station-fullscreen"></div></dialog>
+  <dialog id="routePicker" class="wallet-editor" aria-labelledby="routePickerTitle">
+    <div class="route-picker-content">
+      <div class="route-picker-head"><h2 id="routePickerTitle">选择地点</h2><button type="button" id="closeRoutePicker" class="outline-btn">关闭</button></div>
+      <button type="button" id="routeUseDevice" class="primary-btn">使用当前位置（由 Google 地图定位）</button>
+      <label for="routePickerSearch">搜索常用站点或收藏地点</label>
+      <input type="search" id="routePickerSearch" placeholder="如：京都、难波、suba" autocomplete="off">
+      <p id="routePickerCount" class="route-context" role="status"></p>
+      <div id="routePickerResults" class="route-picker-results"></div>
+    </div>
+  </dialog>
+  <dialog id="stationPhraseDialog" class="wallet-editor" aria-label="请站员指出路线的日文卡片"><div id="stationPhraseContent" class="station-fullscreen"></div></dialog>
   <input id="restoreInput" type="file" accept="application/json" hidden>
-  <script type="module" src="app.js?v=weekly-20261116"></script>
-  <script type="module" src="transit-guide.js?v=travel-20261115"></script>
+  <script type="module" src="app.js?v=transit-20261118"></script>
+  <script type="module" src="transit-guide.js?v=transit-20261118"></script>
 </body>
 </html>
 

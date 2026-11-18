@@ -199,7 +199,6 @@ function showDetail(place,focusTickets=false,focusFood=false){
     const destination=new URL(ticketMapSearch(place)).searchParams.get('query')||place.name+' '+place.city+' 日本';
     const from=$('#routeOrigin'),to=$('#routeDestination');
     if(!from||!to){window.open('https://www.google.com/maps/dir/?'+new URLSearchParams({api:'1',destination,travelmode:'transit'}),'_blank','noopener');return}
-    if(!from.value.trim())from.value='当前位置';
     to.value=destination;
     to.dispatchEvent(new Event('input',{bubbles:true}));
     $('#detailDialog').close();
@@ -227,7 +226,7 @@ function locate(){
   },error=>{line.textContent=error.code===1?'定位被拒绝。手动选城市、街区或车站仍可浏览。':'暂时无法取得位置，请手动选区域。'},{enableHighAccuracy:false,timeout:8000,maximumAge:300000});
 }
 function restoreTrip(){renderJourney()}
-function setupTrip(){setupJourney({onBackup:showBackup,onRoute:address=>{$('#routeDestination').value=address;$('#routeOrigin').value='当前位置';$('#routeDestination').dispatchEvent(new Event('input',{bubbles:true}));showView('transitView');$('#routeDestination').focus()}})}
+function setupTrip(){setupJourney({onBackup:showBackup,onRoute:address=>{$('#routeDestination').value=address;$('#routeOrigin').value='';$('#routeDestination').dispatchEvent(new Event('input',{bubbles:true}));showView('transitView');$('#routeDestination').focus()}})}
 function showBackup(){
   $('#detailContent').innerHTML='<div class="detail-inner backup-sheet"><div class="eyebrow">本机数据</div><h2>备份与恢复</h2><p class="intro">导出包含地点标记、航班、住宿、预约、准备事项和之前填写的记录。恢复会替换本机现有记录。</p><button id="exportBackup" class="primary-btn">导出 JSON 备份</button><button id="importBackup">从备份恢复</button><button id="closeBackup">取消</button></div>';
   $('#detailDialog').showModal();$('#closeBackup').onclick=()=>$('#detailDialog').close();$('#importBackup').onclick=()=>$('#restoreInput').click();$('#exportBackup').onclick=exportBackup;
