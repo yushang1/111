@@ -1,4 +1,4 @@
-import {FOOD_BOOKINGS} from './food-booking.mjs?v=food-20261115';
+import {FOOD_BOOKINGS} from './food-booking.mjs?v=weekly-20261116';
 import {setupJourney,renderJourney,getJourneyData,sanitizeJourneyData} from './journey.js?v=travel-20261115';
 import {hasCoordinate,distanceKm,orderedPlaces,withinBounds} from './geo.mjs';
 import {createFreeMap,mapCategory} from './free-map.mjs';
@@ -43,6 +43,7 @@ const esc=value=>String(value??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;
 function readLocal(key,fallback={}){try{return JSON.parse(localStorage.getItem(key))||fallback}catch{return fallback}}
 function writeLocal(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch{alert('浏览器无法保存本机数据，请使用备份功能保留内容。');return false}}
 const state={data:null,marks:readLocal('kansai-marks'),nearbyCity:'京都',nearbyCategory:'全部',nearbyLimit:12,savedLimit:24,savedScope:'all',position:null,map:null,mapBounds:null,selectedId:null};
+function isLatestSourcePlace(place){return Boolean(place.sourceWeek)&&place.sourceWeek===state.data.latestSourceWeek}
 
 function setupSelect(select,values,allLabel){select.innerHTML=[allLabel,...values].map((v,i)=>`<option value="${i?esc(v):'all'}">${esc(v)}</option>`).join('')}
 function setup(){
@@ -63,6 +64,13 @@ function setup(){
   bind();renderNearby();renderSaved();startMap();
 }
 function bind(){
+  $('#nearbyWeekly').addEventListener('click',event=>{
+    const button=event.currentTarget;
+    const enabled=button.getAttribute('aria-pressed')!=='true';
+    button.setAttribute('aria-pressed',String(enabled));
+    button.classList.toggle('active',enabled);
+    state.nearbyLimit=12;renderNearby(true);
+  });
   $('#nearbyCity').addEventListener('change',event=>{state.nearbyCity=event.target.value;$('#areaQuery').value='';state.nearbyLimit=12;state.mapBounds=null;$('#viewportFilter').checked=false;renderNearby(true)});
   $('#areaQuery').addEventListener('input',()=>{const anchor=selectedAnchor();if(anchor){state.nearbyCity=anchor.city;$('#nearbyCity').value=anchor.city}state.nearbyLimit=12;renderNearby(true)});
   $('#nearbyCategories').addEventListener('click',event=>{const button=event.target.closest('button');if(!button)return;state.nearbyCategory=button.dataset.category;state.nearbyLimit=12;document.querySelectorAll('#nearbyCategories button').forEach(x=>{x.classList.toggle('active',x===button);x.setAttribute('aria-pressed',String(x===button))});renderNearby(true)});
@@ -102,7 +110,8 @@ function showView(id){document.querySelectorAll('.view').forEach(view=>view.clas
 function nearbyBase(){
   const query=$('#areaQuery').value.trim().toLowerCase();
   const anchor=selectedAnchor();
-  return orderedPlaces(state.data.places.filter(place=>(anchor?place.city===anchor.city:state.nearbyCity==='all'||place.city===state.nearbyCity)&&(state.nearbyCategory==='全部'||place.category===state.nearbyCategory)&&(!query||(anchor?hasCoordinate(place)&&(!Number($('#radius').value)||distanceKm(anchor.coordinate,place.coordinate)<=Number($('#radius').value)):`${place.name} ${place.japaneseName} ${place.region}`.toLowerCase().includes(query)))),referencePosition());
+  const weekly=$('#nearbyWeekly').getAttribute('aria-pressed')==='true';
+  return orderedPlaces(state.data.places.filter(place=>(!weekly||isLatestSourcePlace(place))&&(anchor?place.city===anchor.city:state.nearbyCity==='all'||place.city===state.nearbyCity)&&(state.nearbyCategory==='全部'||place.category===state.nearbyCategory)&&(!query||(anchor?hasCoordinate(place)&&(!Number($('#radius').value)||distanceKm(anchor.coordinate,place.coordinate)<=Number($('#radius').value)):`${place.name} ${place.japaneseName} ${place.region}`.toLowerCase().includes(query)))),referencePosition());
 }
 function selectedAnchor(){const query=$('#areaQuery').value.trim().toLowerCase();return state.data.anchors?.find(anchor=>anchor.aliases.some(alias=>alias.toLowerCase()===query))}
 function referencePosition(){return selectedAnchor()?.coordinate||state.position}
@@ -134,6 +143,7 @@ function renderNearby(fit=false){
 function matchesScope(place,scope){
   if(scope==='visit')return ['景点','散步'].includes(place.category);
   if(scope==='advance')return ['reserve','blocked'].includes(ticketFor(place)?.status);
+  if(scope==='weekly')return isLatestSourcePlace(place);
   return true;
 }
 function filteredSaved(){
@@ -150,7 +160,7 @@ function renderSaved(){
   }
   const items=filteredSaved(),shown=items.slice(0,state.savedLimit);$('#savedCount').textContent=`找到 ${items.length} 个地点`;$('#savedList').innerHTML=shown.length?shown.map(placeCard).join(''):'<div class="privacy-card">没有找到符合条件的地点。可以换个关键词，或清除筛选。</div>';$('#savedMore').hidden=shown.length>=items.length}
 function distanceLabel(place){
-  if(!hasCoordinate(place))return '坐标 / 分店待核';
+  if(!hasCoordinate(place))return place.addressCheckedAt?'地址已核对 · 坐标待补':'坐标 / 分店待核';
   const point=referencePosition();if(!point)return '有公开参考坐标';
   const distance=distanceKm(point,place.coordinate);
   return distance<1?`直线约 ${Math.round(distance*1000/50)*50} 米`:`直线约 ${distance.toFixed(1)} 公里`;
@@ -166,6 +176,8 @@ function handleCardAction(event){
   if(action==='food'){showDetail(place,false,true)}
   if(action==='focus'){
     state.nearbyCity=place.city;$('#nearbyCity').value=place.city;$('#areaQuery').value='';$('#radius').value='0';$('#viewportFilter').checked=false;
+    $('#nearbyWeekly').setAttribute('aria-pressed','false');
+    $('#nearbyWeekly').classList.remove('active');
     state.nearbyCategory='全部';document.querySelectorAll('#nearbyCategories button').forEach(b=>{const active=b.dataset.category==='全部';b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
     showView('nearbyView');state.selectedId=place.id;renderNearby();state.map.focus(place);$('#tripMap').scrollIntoView({block:'center',behavior:'smooth'});
   }

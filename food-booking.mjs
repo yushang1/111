@@ -3,6 +3,7 @@ const checked='2026-11-15';
 const walk=(url, detail='资料显示不接受座位预约；直接到店，可能需要排队。')=>({status:'walkin',detail,source:url,sourceLabel:'食べログ门店资料',checked});
 const book=(url,detail,sourceLabel='门店或预约平台')=>({status:'optional',detail,source:url,sourceLabel,booking:url,checked});
 export const FOOD_BOOKINGS={
+  'w261116-tairikitei':{status:'optional',detail:'仅接受套餐预约，不接受只订座；线上预订会用信用卡预付套餐费。若不订套餐，出发前先向门店确认当天接待和用餐方式。',source:'https://tairikitei.com/information/',sourceLabel:'大力邸官网',booking:'https://www.tablecheck.com/ja/shops/tairikitei/reserve',checked:'2026-11-18'},
   p149:{status:'check',detail:'原评论没有具体分店，暂匹配东心斋桥的帰ってきた宮田麺児本店；该候选店资料显示不接受预约，先确认是否为原帖店。',source:'https://tabelog.com/osaka/A2701/A270201/27090229/',sourceLabel:'候选店资料',checked},
   p150:{status:'check',detail:'大国町附近候选“無限ラーメン 難波中本店”资料显示不接受预约，地址为難波中3-16-11；记录显示曾搬迁，先确认与原帖为同一家。',source:'https://tabelog.com/osaka/A2701/A270206/27151525/',sourceLabel:'候选店资料',checked},
   p122:{status:'check',detail:'原帖“東山司”暂匹配ひがしやま司；候选店资料显示完全预约制，可经 TableCheck 选套餐、日期和人数。请先核对是否为原帖店。',source:'https://www.tablecheck.com/ja/shops/higashiyama-tsukasa/reserve',sourceLabel:'候选店预约页',booking:'https://www.tablecheck.com/ja/shops/higashiyama-tsukasa/reserve',checked},

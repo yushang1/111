@@ -47,7 +47,7 @@
         <details class="map-settings"><summary>地图图例与范围</summary><div id="mapLegend" class="map-legend" aria-label="地图分类图例"></div>
         <div class="map-options"><label><input id="viewportFilter" type="checkbox" disabled> 只看地图范围内</label><select id="radius" aria-label="附近直线范围"><option value="0">全部参考点</option><option value="2">直线 2 公里内</option><option value="5">直线 5 公里内</option><option value="10">直线 10 公里内</option></select></div>
         <p id="coordinateCoverage" class="status-line"></p><p class="status-line">定位或输入已收录的车站后，可按直线距离筛选。</p></details></div><div class="nearby-results">
-        <div class="list-meta"><span id="nearbyCount">载入中…</span></div>
+        <div class="list-meta"><span id="nearbyCount">载入中…</span><button type="button" id="nearbyWeekly" class="chip" aria-pressed="false">本期新增</button></div>
         <div id="nearbyList" class="card-list" aria-live="polite"></div>
         <button id="nearbyMore" class="more-btn" hidden>查看更多地点</button></div></div>
       </section>
@@ -60,6 +60,7 @@
             <button data-scope="all" aria-pressed="true">全部</button>
             <button data-scope="visit" aria-pressed="false">游览点</button>
             <button data-scope="advance" aria-pressed="false">提前安排</button>
+            <button data-scope="weekly" aria-pressed="false">本期新增</button>
           </div>
           <button class="filter-toggle" id="filterToggle" aria-expanded="false" aria-controls="savedFilters">筛选</button>
         </div>
@@ -72,9 +73,26 @@
           <select id="savedFoodBooking" aria-label="餐饮预约筛选"><option value="all">全部餐饮预约</option><option value="reserve">需预约</option><option value="recommended">建议预约</option><option value="optional">可预约</option><option value="walkin">直接去 / 不接受预约</option><option value="queue">当日领号</option><option value="check">预约待核实</option></select>
           <select id="savedOrigin" aria-label="来源筛选"><option value="all">全部资料</option><option value="google">历史清单已核对</option><option value="saved">后续已有保存记录</option><option value="supplemental">待确认候选</option></select>
         </div>
-        <div class="list-meta saved-meta"><span id="savedCount" role="status">载入中…</span><button id="clearFilters" class="text-btn" hidden>清除筛选</button><details id="sourceArchive" class="source-archive"><summary>笔记与来源</summary>        <details class="privacy-card" id="weeklyNotesCurrent"><summary><strong>本期新笔记 · 11 篇</strong> <span>10 月 26 日–11 月 1 日 ▾</span></summary><p>本期为两次收藏快照的差异，实际收藏日期未知；图片和部分评论仍待补读。</p><p><strong>祇园烧鸟：</strong>作者喜欢 HYUMA 的鸡翅串和烤饭团，店小，建议提前确认预约；地点尚待地图匹配。</p><p><strong>京都庭院：</strong>永观堂可与南禅寺、鸭川串成散步路线；作者提到参观时需脱鞋，票价和预约以当期信息为准。</p><p><strong>住宿：</strong>帖子分享大阪东天满和福岛的住宿体验，房型、独卫和入住日期价格仍需核对。</p><p>红叶攻略及旅游提示仍有图片待读，出发前请核实当年景况与开放信息。</p><ul class="weekly-notes"><li><span>其他待核验</span> <a href="https://www.xiaohongshu.com/explore/6ae04c72000000000200bc8c" target="_blank" rel="noopener noreferrer">东进阪出•京都篇 ↗</a></li><li><span>其他待核验</span> <a href="https://www.xiaohongshu.com/explore/6ae625ea000000001a021120" target="_blank" rel="noopener noreferrer">推荐先玩大阪还是先玩京都呀？ ↗</a></li><li><span>其他待核验</span> <a href="https://www.xiaohongshu.com/explore/6ae541560000000012008443" target="_blank" rel="noopener noreferrer">听劝！大阪哪些地方必去？ ↗</a></li><li><span>行程</span> <a href="https://www.xiaohongshu.com/explore/6ae4710f000000001601b3b7" target="_blank" rel="noopener noreferrer">京都旅游，可能会遇到的突然 ↗</a></li><li><span>餐饮</span> <a href="https://www.xiaohongshu.com/explore/6ae458a80000000003009739" target="_blank" rel="noopener noreferrer">京都必吃烧鸟：炭火焼とりHYUMA ↗</a></li><li><span>景点与时令</span> <a href="https://www.xiaohongshu.com/explore/672e0059000000001a01ed10" target="_blank" rel="noopener noreferrer">日本自由行大实话-京都红叶特别篇（精华版） ↗</a></li><li><span>行程</span> <a href="https://www.xiaohongshu.com/explore/6ae308b20000000002037cdf" target="_blank" rel="noopener noreferrer">京都散策｜一个人旅行，也能拍出日剧感📷 ↗</a></li><li><span>行程</span> <a href="https://www.xiaohongshu.com/explore/6ae4618b000000001e016db9" target="_blank" rel="noopener noreferrer">第一次去京都｜6天慢节奏路线安排 ↗</a></li><li><span>其他待核验</span> <a href="https://www.xiaohongshu.com/explore/6ae1d5dd000000002800494d" target="_blank" rel="noopener noreferrer">在京都📍花的最值的20块钱… ↗</a></li><li><span>其他待核验</span> <a href="https://www.xiaohongshu.com/explore/6ae71f01000000000f03b71e" target="_blank" rel="noopener noreferrer">二刷京都大阪总结的红榜黑榜 ↗</a></li><li><span>住宿</span> <a href="https://www.xiaohongshu.com/explore/6ae6ddf10000000025013f29" target="_blank" rel="noopener noreferrer">大阪东天满、福岛住宿体验（原笔记） ↗</a></li></ul></details>
+        <div class="list-meta saved-meta"><span id="savedCount" role="status">载入中…</span><button id="clearFilters" class="text-btn" hidden>清除筛选</button><details id="sourceArchive" class="source-archive"><summary>笔记与来源</summary>
+          <details class="privacy-card" id="weeklyNotesCurrent">
+            <summary><strong>本期笔记 · 11 月 9–15 日</strong> <span>11 月 16 日整理</span></summary>
+            <p>按 11 月 9 日、16 日两次收藏快照整理，38 篇标题与关西相关，未逐篇核完，不等于新增 38 个地点。</p>
+            <p><strong>已上网页：</strong>京都餐饮和街区 9 处、大阪及奈良住宿候选各 1 处。「本期新增」可快速筛选；东本愿寺原本就有，不重复收录。</p>
+            <p><strong>仍待确认：</strong>musi-vege 只有品牌线索，分店不明，不建地图点；赏枫和灯光多为当时体验，不当成 12 月开放信息。</p>
+            <ul class="weekly-notes">
+              <li><span>餐饮</span> <a href="https://www.xiaohongshu.com/explore/6af821b4000000002b01b6ee" target="_blank" rel="noopener noreferrer">三刷京都不排队不踩雷的性价比美食推荐 ↗</a></li>
+              <li><span>餐饮</span> <a href="https://www.xiaohongshu.com/explore/6af4518b000000002a025f51" target="_blank" rel="noopener noreferrer">关西偏蔬菜多多清淡型平价型一人食 ↗</a></li>
+              <li><span>街区</span> <a href="https://www.xiaohongshu.com/explore/6af02e97000000000300920e" target="_blank" rel="noopener noreferrer">京都四条步行距离6家宝藏店铺寺庙推荐 ↗</a></li>
+              <li><span>交通</span> <a href="https://www.xiaohongshu.com/explore/6af671e0000000002a00cedf" target="_blank" rel="noopener noreferrer">住难波必存｜京都奈良神户 USJ 交通小抄 ↗</a></li>
+              <li><span>住宿</span> <a href="https://www.xiaohongshu.com/explore/6af328eb000000002b03abec" target="_blank" rel="noopener noreferrer">大阪、奈良亲住笔记（原帖亦含其他地区） ↗</a></li>
+              <li><span>住宿</span> <a href="https://www.xiaohongshu.com/explore/6af1ed37000000002c026685" target="_blank" rel="noopener noreferrer">大阪酒店决赛圈了！ ↗</a></li>
+              <li><span>住宿</span> <a href="https://www.xiaohongshu.com/explore/6af4074d000000002a00e18d" target="_blank" rel="noopener noreferrer">大阪酒店决赛圈！急！ ↗</a></li>
+              <li><span>住宿</span> <a href="https://www.xiaohongshu.com/explore/6af97d75000000002b012fde" target="_blank" rel="noopener noreferrer">大阪酒店极限四选一 ↗</a></li>
+            </ul>
+          </details>
+        <details class="privacy-card" id="weeklyNotesNovember01"><summary><strong>历史笔记 · 11 篇</strong> <span>10 月 26 日–11 月 1 日 ▾</span></summary><p>本期为两次收藏快照的差异，实际收藏日期未知；图片和部分评论仍待补读。</p><p><strong>祇园烧鸟：</strong>作者喜欢 HYUMA 的鸡翅串和烤饭团，店小，建议提前确认预约；地点尚待地图匹配。</p><p><strong>京都庭院：</strong>永观堂可与南禅寺、鸭川串成散步路线；作者提到参观时需脱鞋，票价和预约以当期信息为准。</p><p><strong>住宿：</strong>帖子分享大阪东天满和福岛的住宿体验，房型、独卫和入住日期价格仍需核对。</p><p>红叶攻略及旅游提示仍有图片待读，出发前请核实当年景况与开放信息。</p><ul class="weekly-notes"><li><span>其他待核验</span> <a href="https://www.xiaohongshu.com/explore/6ae04c72000000000200bc8c" target="_blank" rel="noopener noreferrer">东进阪出•京都篇 ↗</a></li><li><span>其他待核验</span> <a href="https://www.xiaohongshu.com/explore/6ae625ea000000001a021120" target="_blank" rel="noopener noreferrer">推荐先玩大阪还是先玩京都呀？ ↗</a></li><li><span>其他待核验</span> <a href="https://www.xiaohongshu.com/explore/6ae541560000000012008443" target="_blank" rel="noopener noreferrer">听劝！大阪哪些地方必去？ ↗</a></li><li><span>行程</span> <a href="https://www.xiaohongshu.com/explore/6ae4710f000000001601b3b7" target="_blank" rel="noopener noreferrer">京都旅游，可能会遇到的突然 ↗</a></li><li><span>餐饮</span> <a href="https://www.xiaohongshu.com/explore/6ae458a80000000003009739" target="_blank" rel="noopener noreferrer">京都必吃烧鸟：炭火焼とりHYUMA ↗</a></li><li><span>景点与时令</span> <a href="https://www.xiaohongshu.com/explore/672e0059000000001a01ed10" target="_blank" rel="noopener noreferrer">日本自由行大实话-京都红叶特别篇（精华版） ↗</a></li><li><span>行程</span> <a href="https://www.xiaohongshu.com/explore/6ae308b20000000002037cdf" target="_blank" rel="noopener noreferrer">京都散策｜一个人旅行，也能拍出日剧感📷 ↗</a></li><li><span>行程</span> <a href="https://www.xiaohongshu.com/explore/6ae4618b000000001e016db9" target="_blank" rel="noopener noreferrer">第一次去京都｜6天慢节奏路线安排 ↗</a></li><li><span>其他待核验</span> <a href="https://www.xiaohongshu.com/explore/6ae1d5dd000000002800494d" target="_blank" rel="noopener noreferrer">在京都📍花的最值的20块钱… ↗</a></li><li><span>其他待核验</span> <a href="https://www.xiaohongshu.com/explore/6ae71f01000000000f03b71e" target="_blank" rel="noopener noreferrer">二刷京都大阪总结的红榜黑榜 ↗</a></li><li><span>住宿</span> <a href="https://www.xiaohongshu.com/explore/6ae6ddf10000000025013f29" target="_blank" rel="noopener noreferrer">大阪东天满、福岛住宿体验（原笔记） ↗</a></li></ul></details>
         <details class="privacy-card" id="weeklyNotes">
-          <summary><strong>上一期笔记 · 20 篇</strong> <span>10 月 19–25 日 ▾</span></summary>
+          <summary><strong>历史笔记 · 20 篇</strong> <span>10 月 19–25 日 ▾</span></summary>
           <p>10 月 26 日与上次快照比较得到的关西标题线索，收藏日期未知；笔记数不等于新地点。链接可能需要登录或从收藏页打开。</p>
           <p><strong>已读正文：</strong>《低精力人群关西八日游攻略》提到大阪、京都、神户、奈良和宇治；作者记录七个游玩日每天 14,544–23,923 步，按自己的体力安排。另已补读三篇美食、京都站咖啡、红叶、奈良与东山路线正文；新增候选的位置和营业信息待核实，部分图片、评论及其余来源仍待补读。</p>
           <p><strong>东山路线：</strong>清水寺 → 二三年坂 → 圆山公园 → 八坂神社 → 祇园，可按体力截断；去清水寺途中仍有上坡。</p>
@@ -99,6 +117,12 @@
             <div class="route-tools"><button id="routeHere" type="button">当前位置</button><button id="routeHotel" type="button" hidden>回酒店</button><button id="routeSwap" type="button" disabled>⇄ 起终点对调</button></div>
             <a id="mapsLink" class="route-go" aria-disabled="true" target="_blank" rel="noopener noreferrer">先选一个目的地</a>
             <p id="routeContext" class="route-context"></p>
+            <details class="privacy-card">
+              <summary>选对车站：难波与京都河原町</summary>
+              <p><strong>难波：</strong>南海难波是南海机场线用站；大阪难波是近铁、阪神用站；JR 难波另有站点。查路线时带上运营商，换乘要预留步行时间。</p>
+              <p><strong>京都：</strong>阪急京都河原町在四条河原町一带，不是 JR 京都站。目的地是新干线或 JR 站区时，选「京都站（JR）」。</p>
+              <p><a href="https://www.nankai.co.jp/traffic/kix.html" target="_blank" rel="noopener noreferrer">南海机场指南</a> · <a href="https://www.kintetsu.co.jp/soukatsu/kounai/nanba.html" target="_blank" rel="noopener noreferrer">近铁难波换乘图</a> · <a href="https://ja.kyoto.travel/feature/traffic/train.php" target="_blank" rel="noopener noreferrer">京都市乘车指南</a></p>
+            </details>
           </div>
           <div class="guide-column">
             <div class="guide-tabs" role="tablist" aria-label="乘车指引">
@@ -117,7 +141,17 @@
         <div id="journeyNow" class="wallet-grid"></div>
         <nav class="wallet-shortcuts" aria-label="出行资料"><button type="button" data-jump="flightSection">往返航班</button><button type="button" data-jump="staySection">住宿</button><button type="button" data-jump="bookingSection">预约</button><button type="button" data-jump="prepSection">准备事项</button></nav>
         <section id="flightSection" class="wallet-section" aria-labelledby="flightTitle"><div class="wallet-section-head"><h3 id="flightTitle">往返航班</h3><button type="button" data-add="flights">＋ 添加</button></div><div id="flightCards" class="wallet-grid"></div></section>
-        <section id="staySection" class="wallet-section" aria-labelledby="stayTitle"><div class="wallet-section-head"><h3 id="stayTitle">住宿</h3><button type="button" data-add="stays">＋ 添加</button></div><div id="stayCards" class="wallet-grid"></div></section>
+        <section id="staySection" class="wallet-section" aria-labelledby="stayTitle">
+          <div class="wallet-section-head"><h3 id="stayTitle">住宿</h3><button type="button" data-add="stays">＋ 添加</button></div>
+          <div id="stayCards" class="wallet-grid"></div>
+          <details class="wallet-storage-note">
+            <summary>本期住宿参考：大阪与奈良</summary>
+            <p><strong>大阪站一带：</strong><a href="https://www.hearton.co.jp/access/nishi-umeda" target="_blank" rel="noopener noreferrer">哈顿西梅田</a>靠近 JR 大阪站西口，原帖作者亲住，提到房间偏小。</p>
+            <p><strong>淀屋桥、北滨等：</strong>新帖把 Prince Smart Inn 大阪淀屋桥、淀屋桥京阪及相铁 FRESA INN 北滨列为候选，网页原有卡片可查。另有相铁淀屋桥、FORZA 北滨、东横 INN 大阪难波、Granbell Osaka 等选房线索，不等于入住推荐；订房前核对分店地址。</p>
+            <p><strong>奈良：</strong><a href="https://dormy-hotels.com/dormyinn/hotels/nono_nara/" target="_blank" rel="noopener noreferrer">御宿野乃奈良</a>是原帖作者亲住过的备选，作者喜欢浴场和早餐。</p>
+            <p>以上是比较资料，不是本机预订。具体日期的房态、含税总价、独立浴室和取消条件以订房页为准。</p>
+          </details>
+        </section>
         <section id="bookingSection" class="wallet-section" aria-labelledby="bookingTitle"><div class="wallet-section-head"><h3 id="bookingTitle">预约</h3><button type="button" data-add="bookings">＋ 添加</button></div><div id="bookingCards" class="wallet-grid"></div></section>
         <section id="prepSection" class="wallet-section" aria-labelledby="prepTitle"><div class="wallet-section-head"><h3 id="prepTitle">准备事项 <span id="prepCount"></span></h3></div><div id="journeyTasks"></div><form id="journeyTaskForm" class="wallet-task-form"><label class="sr-only" for="newJourneyTask">新增准备事项</label><input id="newJourneyTask" placeholder="记一件出发前要办的事" maxlength="300" required><button type="submit">添加</button></form></section>
         <details id="legacyTrip" class="wallet-storage-note" hidden><summary>之前填写的记录</summary><div id="legacyRecords"></div></details>
@@ -142,7 +176,7 @@
   </dialog>
   <dialog id="stationPhraseDialog" class="wallet-editor" aria-label="给站员看的日文问路卡"><div id="stationPhraseContent" class="station-fullscreen"></div></dialog>
   <input id="restoreInput" type="file" accept="application/json" hidden>
-  <script type="module" src="app.js?v=food-20261115"></script>
+  <script type="module" src="app.js?v=weekly-20261116"></script>
   <script type="module" src="transit-guide.js?v=travel-20261115"></script>
 </body>
 </html>
