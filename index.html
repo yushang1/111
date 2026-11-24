@@ -109,6 +109,11 @@
       <section id="transitView" class="view" aria-labelledby="transitTitle">
         <div class="section-head"><h2 id="transitTitle">乘车助手</h2></div>
         <p class="travel-lead">查一段路，看懂怎么坐。</p>
+        <div class="wallet-card" style="margin:12px 0">
+          <h3>三得利京都啤酒工厂</h3>
+          <p class="travel-lead">往返路线、接驳巴士、现场照片与备用交通。</p>
+          <button type="button" class="wallet-action" data-open-suntory>查看乘车攻略 →</button>
+        </div>
         <div class="travel-guide-layout">
           <div class="journey route-panel">
             <div class="route-stop"><label for="routeOrigin">从</label><input id="routeOrigin" placeholder="当前位置（由 Google 地图定位）" aria-describedby="routeLocationNote" autocomplete="off"><button type="button" class="route-pick" data-route-pick="routeOrigin" aria-label="选择起点">选择</button></div>
@@ -137,6 +142,11 @@
       </section>
       <section id="tripView" class="view" aria-labelledby="tripTitle">
         <div class="section-head"><h2 id="tripTitle">随身出行</h2><button id="tripBackup" class="outline-btn">备份</button></div>
+        <div class="wallet-card" style="margin:12px 0">
+          <h3>三得利京都啤酒工厂</h3>
+          <p class="travel-lead">往返路线、接驳巴士、现场照片与备用交通。</p>
+          <button type="button" class="wallet-action" data-open-suntory>查看乘车攻略 →</button>
+        </div>
         <div class="wallet-hero"><p class="travel-eyebrow">MY KANSAI JOURNEY</p><h3 id="journeyHeading" class="travel-heading">把确定的事，放在手边</h3><p id="journeySubtitle" class="travel-lead"></p></div>
         <div class="wallet-toolbar"><h3 id="journeyDateLabel">今天要用</h3><label class="wallet-date"><span>查看日期</span><input id="journeyDate" type="date"></label></div>
         <div id="journeyNow" class="wallet-grid"></div>
@@ -198,6 +208,31 @@
   <input id="restoreInput" type="file" accept="application/json" hidden>
   <script type="module" src="app.js?v=suntory-1"></script>
   <script type="module" src="transit-guide.js?v=suntory-1"></script>
+  <script type="module">
+    import {openSuntoryGuide, SUNTORY_PLACE_ID} from './suntory-guide.mjs';
+    import {getJourneyData} from './journey.js?v=suntory-1';
+    const referencePlan = {placeId:SUNTORY_PLACE_ID, name:'12月12日特别试饮交通参考', date:'2026-12-12', time:'14:35', endTime:'16:05', status:'confirmed'};
+    const factoryName = 'サントリー〈天然水のビール工場〉京都';
+    const factoryAddress = '京都府長岡京市調子3-1-1';
+    const gateName = 'サントリー京都ビール工場 正門';
+    const fallbackPlace = {japaneseName:factoryName,address:factoryAddress,gate:{name:gateName,mapUrl:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(gateName+' '+factoryAddress)},officialUrl:'https://www.suntory.co.jp/factory/kyoto/'};
+    let placePromise;
+    async function getSuntoryPlace(){
+      if(!placePromise) placePromise=fetch('places.json?v=suntory-1',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('places');return r.json()}).then(data=>data.places.find(p=>p.id===SUNTORY_PLACE_ID)||fallbackPlace).catch(()=>{placePromise=null;return fallbackPlace});
+      return placePromise;
+    }
+    document.querySelectorAll('[data-open-suntory]').forEach(button=>button.addEventListener('click',async()=>{
+      button.disabled=true;
+      try{
+        const booking=getJourneyData().bookings.find(item=>item.placeId===SUNTORY_PLACE_ID&&item.status==='confirmed'&&item.date&&item.time);
+        openSuntoryGuide(booking||referencePlan,await getSuntoryPlace());
+        if(!booking){
+          const label=document.querySelector('#suntoryContent .suntory-summary');
+          if(label){const note=document.createElement('p');note.className='suntory-small';note.textContent='参考场次交通攻略，不代表本机已有预约。';label.prepend(note);}
+        }
+      }finally{button.disabled=false;}
+    }));
+  </script>
 </body>
 </html>
 
