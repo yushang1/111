@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="app.css?v=food-20261115">
   <link rel="stylesheet" href="map.css">
-  <link rel="stylesheet" href="travel-guide.css?v=transit-20261118">
+  <link rel="stylesheet" href="travel-guide.css?v=suntory-1">
   <link rel="stylesheet" href="maplibre-gl.css">
   <title>关西口袋收藏</title>
 </head>
@@ -185,10 +185,19 @@
       <div id="routePickerResults" class="route-picker-results"></div>
     </div>
   </dialog>
-  <dialog id="stationPhraseDialog" class="wallet-editor" aria-label="请站员指出路线的日文卡片"><div id="stationPhraseContent" class="station-fullscreen"></div></dialog>
+  <dialog id="suntoryDialog" class="wallet-editor suntory-dialog" aria-labelledby="suntoryTitle">
+    <header class="suntory-header"><h2 id="suntoryTitle">三得利乘车攻略</h2><form method="dialog"><button type="submit" class="outline-btn" autofocus>关闭</button></form></header>
+    <div id="suntoryContent"></div>
+  </dialog>
+  <dialog id="suntoryPhoto" class="wallet-editor suntory-photo-dialog" aria-label="放大查看现场照片">
+    <form method="dialog"><button type="submit" class="outline-btn" autofocus>关闭照片</button></form>
+    <img alt="">
+    <p></p>
+  </dialog>
+  <dialog id="stationPhraseDialog" class="wallet-editor" aria-label="向工作人员出示的日文卡片"><div id="stationPhraseContent" class="station-fullscreen"></div></dialog>
   <input id="restoreInput" type="file" accept="application/json" hidden>
-  <script type="module" src="app.js?v=transit-20261118"></script>
-  <script type="module" src="transit-guide.js?v=transit-20261118"></script>
+  <script type="module" src="app.js?v=suntory-1"></script>
+  <script type="module" src="transit-guide.js?v=suntory-1"></script>
 </body>
 </html>
 

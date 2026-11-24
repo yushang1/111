@@ -51,3 +51,44 @@
 [hidden]{display:none!important}
 @media(min-width:680px){.travel-guide-layout{grid-template-columns:minmax(245px,.85fr) minmax(0,1.3fr);align-items:start}.travel-guide-layout>.route-panel{position:sticky;top:18px}.wallet-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ticket-methods{grid-template-columns:1fr}.wallet-hero{padding:10px 0}.wallet-task-form{max-width:520px}}
 @media(max-width:360px){.wallet-card{padding:14px}.wallet-empty{padding:13px;gap:8px}.wallet-empty>.wallet-action{font-size:11px;padding:6px 8px}.wallet-toolbar{align-items:flex-start}.wallet-date{flex-direction:column;align-items:flex-end}.station-board{padding:12px}.station-board-grid{gap:4px}.station-board-grid strong{font-size:13px}.flight-leg strong{font-size:26px}}
+
+.wallet-action.wallet-guide {background:var(--ink);color:#fff;min-height:44px}
+.suntory-dialog {width:min(640px,calc(100% - 18px));padding:0;overscroll-behavior:contain}
+.suntory-header {position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;background:var(--card);border-bottom:1px solid var(--line)}
+.suntory-header h2 {margin:0;font-size:19px}
+.suntory-header button,.suntory-photo-dialog button {min-height:44px}
+#suntoryContent {padding:14px 16px 22px;font-size:14px;line-height:1.55}
+#suntoryContent section {margin:0 0 18px;scroll-margin-top:82px}
+#suntoryContent h3 {font-size:17px;margin:0 0 8px}
+#suntoryContent p {margin:6px 0}
+.suntory-summary,.suntory-fallback {padding:14px;border-radius:15px;background:#edf1e7}
+.suntory-fallback {background:#fbf1dd}
+#suntoryContent .suntory-summary h3 {font-size:22px;font-variant-numeric:tabular-nums}
+.suntory-summary h3 span {white-space:nowrap}
+.suntory-kicker,.suntory-small {font-size:12px;color:var(--ink-2)}
+.suntory-offline {padding:8px 0 14px;font-size:12px;color:var(--ink-2)}
+.suntory-steps {list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.suntory-steps li {display:grid;grid-template-columns:76px minmax(0,1fr);gap:8px;padding:11px 0;border-bottom:1px solid var(--line)}
+.suntory-steps h4 {margin:0;font-size:14px}
+#suntoryContent .suntory-steps p {font-size:13px;margin:4px 0 0;color:var(--ink-2)}
+.suntory-time {font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.suntory-time small {display:block;color:var(--ink-2);font-size:11px}
+.suntory-actions {display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.suntory-actions a,.suntory-actions button {display:inline-flex;align-items:center;min-height:44px;padding:6px 10px;border:1px solid #ccd8ca;border-radius:10px;background:var(--card);color:var(--ink);font-size:13px;font-weight:600;text-decoration:none;text-align:left}
+.suntory-header button:focus-visible,.suntory-actions a:focus-visible,.suntory-details summary:focus-visible {outline:2px solid var(--ink);outline-offset:2px}
+.suntory-decisions {margin:8px 0}
+.suntory-decisions dt {font-weight:700;margin-top:9px}
+.suntory-decisions dd {margin:0;color:var(--ink-2)}
+.suntory-details {border-top:1px solid var(--line);padding-bottom:7px;scroll-margin-top:82px}
+.suntory-details summary {cursor:pointer;font-weight:700;padding:12px 0;min-height:44px}
+.suntory-tables,.suntory-photos {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
+.suntory-table {border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13px}
+.suntory-table th,.suntory-table td {padding:5px 2px;border-bottom:1px solid var(--line);text-align:center}
+.suntory-photo {min-width:0;margin:0}
+.suntory-photo button {display:block;width:100%;padding:0;border:0;border-radius:9px;overflow:hidden;background:#e5ebe1;cursor:zoom-in}
+.suntory-photo img {display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.suntory-photo figcaption {font-size:12px;color:var(--ink-2);margin:5px 0}
+.suntory-photo-dialog {width:min(980px,calc(100% - 18px));padding:10px;overscroll-behavior:contain}
+.suntory-photo-dialog form {text-align:right;margin-bottom:8px}
+.suntory-photo-dialog img {display:block;width:100%;height:auto;border-radius:7px}
+.suntory-photo-dialog p {margin:8px 0 0;font-size:13px}

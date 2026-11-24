@@ -73,12 +73,13 @@ hotelButton.onclick=()=>{from.value='';to.value=hotelAddress;updateRoute()};
 window.addEventListener('journey-updated',event=>updateHotel(event.detail));
 try{updateHotel(JSON.parse(localStorage.getItem('kansai-journey-v2')||'{}'))}catch{}
 const replyPairs={stop:[['停まります','停这一站'],['停まりません','不停这一站']],ticket:[['必要です','还要另买'],['不要です','不用另买']]};
-root.addEventListener('click',event=>{
-  const button=event.target.closest('[data-phrase]');if(!button)return;
+document.addEventListener('click',event=>{
+  const button=event.target.closest('#transitView [data-phrase], #suntoryDialog [data-phrase]');if(!button)return;
   const answers=replyPairs[button.dataset.answer];
   const reply=answers?'<div class="station-replies">'+answers.map(([japanese,chinese])=>'<div><strong lang="ja">'+japanese+'</strong><span>'+chinese+'</span></div>').join('')+'</div>':'';
   const dialog=document.querySelector('#stationPhraseDialog');
-  dialog.querySelector('#stationPhraseContent').innerHTML=`<p class="travel-eyebrow" lang="ja">すみません。日本語がよく分かりません。</p><p class="phrase-jp" lang="ja">${esc(button.dataset.phrase)}</p>${to.value.trim()?`<p class="wallet-muted">目的地 · 请同时出示地图</p><p class="phrase-place">${esc(to.value.trim())}</p>`:''}${reply}<button type="button" id="closeStationPhrase">收起</button>`;
+  const place=button.dataset.phrasePlace??to.value.trim();
+  dialog.querySelector('#stationPhraseContent').innerHTML=`<p class="travel-eyebrow" lang="ja">すみません。日本語がよく分かりません。</p><p class="phrase-jp" lang="ja">${esc(button.dataset.phrase)}</p>${place?`<p class="wallet-muted">目的地</p><p class="phrase-place" lang="${button.hasAttribute('data-phrase-place')?'ja':'zh-CN'}">${esc(place)}</p>`:''}${reply}<button type="button" id="closeStationPhrase">收起</button>`;
   dialog.showModal();dialog.querySelector('#closeStationPhrase').onclick=()=>dialog.close();
 });
 document.querySelector('#stationPhraseDialog').addEventListener('click',event=>{if(event.target===event.currentTarget)event.currentTarget.close()});

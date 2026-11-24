@@ -1,5 +1,5 @@
-const CACHE='kansai-pocket-v32-transit-20261118';
-const ASSETS=['./','index.html','app.css','map.css','transit.js','transit-guide.js','journey.js','travel-guide.css','app.js','food-booking.mjs','geo.mjs','free-map.mjs','maplibre-gl.js','maplibre-gl.css','icon.svg','icon-192.png','icon-512.png','manifest.webmanifest','places.json'];
+const CACHE='kansai-pocket-v33-suntory';
+const ASSETS=['./','index.html','app.css','map.css','transit.js','transit-guide.js','journey.js','travel-guide.css','app.js','food-booking.mjs','geo.mjs','free-map.mjs','maplibre-gl.js','maplibre-gl.css','icon.svg','icon-192.png','icon-512.png','manifest.webmanifest','places.json','suntory-guide.mjs','suntory-photos/west.jpg','suntory-photos/shuttle.jpg','suntory-photos/factory.jpg','suntory-photos/hankyu.jpg'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('kansai-pocket-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
