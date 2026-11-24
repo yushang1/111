@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="app.css?v=food-20261115">
   <link rel="stylesheet" href="map.css">
-  <link rel="stylesheet" href="travel-guide.css?v=suntory-1">
+  <link rel="stylesheet" href="travel-guide.css?v=trip-compact-1">
   <link rel="stylesheet" href="maplibre-gl.css">
   <title>关西口袋收藏</title>
 </head>
@@ -141,10 +141,7 @@
         </div>
       </section>
       <section id="tripView" class="view" aria-labelledby="tripTitle">
-        <div class="section-head"><h2 id="tripTitle">随身出行</h2><button id="tripBackup" class="outline-btn">备份</button></div>
-        <div class="wallet-hero"><p class="travel-eyebrow">MY KANSAI JOURNEY</p><h3 id="journeyHeading" class="travel-heading">把确定的事，放在手边</h3><p id="journeySubtitle" class="travel-lead"></p></div>
-        <div class="wallet-toolbar"><h3 id="journeyDateLabel">今天要用</h3><label class="wallet-date"><span>查看日期</span><input id="journeyDate" type="date"></label></div>
-        <div id="journeyNow" class="wallet-grid"></div>
+        <div class="section-head"><h2 id="tripTitle">出行</h2><button id="tripBackup" class="outline-btn">备份</button></div>
         <nav class="wallet-shortcuts" aria-label="出行资料"><button type="button" data-jump="flightSection">往返航班</button><button type="button" data-jump="staySection">住宿</button><button type="button" data-jump="bookingSection">预约</button><button type="button" data-jump="prepSection">准备事项</button></nav>
         <section id="flightSection" class="wallet-section" aria-labelledby="flightTitle"><div class="wallet-section-head"><h3 id="flightTitle">往返航班</h3><button type="button" data-add="flights">＋ 添加</button></div><div id="flightCards" class="wallet-grid"></div></section>
         <section id="staySection" class="wallet-section" aria-labelledby="stayTitle">
@@ -201,7 +198,7 @@
   </dialog>
   <dialog id="stationPhraseDialog" class="wallet-editor" aria-label="向工作人员出示的日文卡片"><div id="stationPhraseContent" class="station-fullscreen"></div></dialog>
   <input id="restoreInput" type="file" accept="application/json" hidden>
-  <script type="module" src="app.js?v=suntory-1"></script>
+  <script type="module" src="app.js?v=trip-compact-1"></script>
   <script type="module" src="transit-guide.js?v=suntory-1"></script>
   <script type="module">
     import {openSuntoryGuide, SUNTORY_PLACE_ID} from './suntory-guide.mjs';

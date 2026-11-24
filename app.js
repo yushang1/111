@@ -1,5 +1,5 @@
 import {FOOD_BOOKINGS} from './food-booking.mjs?v=weekly-20261116';
-import {setupJourney,renderJourney,getJourneyData,sanitizeJourneyData} from './journey.js?v=suntory-1';
+import {setupJourney,renderJourney,getJourneyData,sanitizeJourneyData} from './journey.js?v=trip-compact-1';
 import {openSuntoryGuide} from './suntory-guide.mjs';
 import {hasCoordinate,distanceKm,orderedPlaces,withinBounds} from './geo.mjs';
 import {createFreeMap,mapCategory} from './free-map.mjs';

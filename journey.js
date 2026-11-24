@@ -5,7 +5,6 @@ const clean=(value,max=2000)=>typeof value==='string'?value.slice(0,max):'';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fields={flights:['label','number','depDate','depTime','depPlace','depZone','arrDate','arrTime','arrPlace','arrZone','note'],stays:['name','address','checkin','checkout','confirmation','url','note'],bookings:['name','date','time','endTime','address','confirmation','url','note','status','payment']};
 const validTime=value=>/^([01]\d|2[0-3]):[0-5]\d$/.test(value);
-const today=()=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Tokyo'}).format(new Date());
 const validDate=value=>/^\d{4}-\d{2}-\d{2}$/.test(value)&&!Number.isNaN(Date.parse(value+'T00:00:00Z'))&&new Date(value+'T00:00:00Z').toISOString().slice(0,10)===value;
 const niceDate=value=>validDate(value)?`${Number(value.slice(5,7))}月${Number(value.slice(8))}日`:'';
 const safeURL=value=>{try{const url=new URL(value);return url.protocol==='https:'?url.href:''}catch{return ''}};
@@ -31,46 +30,29 @@ export function sanitizeJourneyData(raw){
   return result;
 }
 export const getJourneyData=()=>sanitizeJourneyData(load(KEY,{}));
-let options={},viewDate='',editorState=null;
+let options={},editorState=null;
 const root=()=>document.querySelector('#tripView');
 function status(message){document.querySelector('#tripSaveStatus').textContent=message}
 function save(data){try{localStorage.setItem(KEY,JSON.stringify(sanitizeJourneyData(data)));return true}catch{status('本机空间不足，未保存。请先导出备份。');return false}}
 function mapButton(address,label='查乘车路线'){return address?`<button type="button" class="wallet-action" data-route="${esc(address)}">${label}<span aria-hidden="true"> ↗</span></button>`:''}
 function links(item,guide=false){return `<div class="wallet-actions">${guide?`<button type="button" class="wallet-action wallet-guide" data-booking-guide="${esc(item.id)}">怎么去 <span aria-hidden="true"> →</span></button>`:mapButton(item.address)}${item.address?`<button type="button" class="wallet-action" data-copy-text="${esc(item.address)}">复制地址</button>`:''}${item.confirmation?`<button type="button" class="wallet-action" data-copy-text="${esc(item.confirmation)}">复制确认号</button>`:''}${safeURL(item.url)?`<a class="wallet-action" href="${esc(safeURL(item.url))}" target="_blank" rel="noopener noreferrer">查看确认资料 ↗</a>`:''}</div>`}
 function editButton(kind,id){return `<button type="button" class="wallet-edit" data-edit-kind="${kind}" data-id="${esc(id)}" aria-label="编辑${kind==='flights'?'航班':kind==='stays'?'住宿':'预约'}">编辑</button>`}
-function emptyCard(title,body,kind,button){return `<div class="wallet-empty"><div><strong>${title}</strong><p>${body}</p></div>${kind?`<button type="button" class="wallet-action" data-add="${kind}">${button}</button>`:''}</div>`}
-function stayCard(item,spotlight=false){return `<article class="wallet-card ${spotlight?'wallet-feature':''}"><div class="wallet-card-top"><span class="wallet-kicker">${spotlight?'住在这里':'住宿'}</span>${editButton('stays',item.id)}</div><h4>${esc(item.name||'住宿')}</h4><p class="wallet-dates">${esc(niceDate(item.checkin))}入住${item.checkout?' · '+esc(niceDate(item.checkout))+'退房':''}</p>${item.address?`<p class="wallet-address" lang="ja">${esc(item.address)}</p>`:''}${item.confirmation?`<p class="wallet-meta">确认号 <span>${esc(item.confirmation)}</span></p>`:''}${item.note?`<p class="wallet-note">${esc(item.note)}</p>`:''}${links(item)}</article>`}
-function bookingCard(item,spotlight=''){
+function emptyCard(title,body,kind,button){return `<div class="wallet-empty"><div><strong>${title}</strong>${body?`<p>${body}</p>`:''}</div>${kind?`<button type="button" class="wallet-action" data-add="${kind}">${button}</button>`:''}</div>`}
+function stayCard(item){return `<article class="wallet-card"><div class="wallet-card-top"><span class="wallet-kicker">住宿</span>${editButton('stays',item.id)}</div><h4>${esc(item.name||'住宿')}</h4><p class="wallet-dates">${esc(niceDate(item.checkin))}入住${item.checkout?' · '+esc(niceDate(item.checkout))+'退房':''}</p>${item.address?`<p class="wallet-address" lang="ja">${esc(item.address)}</p>`:''}${item.confirmation?`<p class="wallet-meta">确认号 <span>${esc(item.confirmation)}</span></p>`:''}${item.note?`<p class="wallet-note">${esc(item.note)}</p>`:''}${links(item)}</article>`}
+function bookingCard(item){
   const guide=item.placeId===SUNTORY_PLACE_ID;
   const place=guide?options.getPlace?.(item.placeId):null;
   const address=place?.address||item.address;
   const time=item.endTime?`${item.time}–${item.endTime}`:item.time;
-  return `<article class="wallet-card ${spotlight?'wallet-feature':''}"><div class="wallet-card-top"><span class="wallet-kicker">${item.status==='pending'?'待确认':'已预约'}${time?' · '+esc(time)+' 日本时间':''}</span>${editButton('bookings',item.id)}</div><h4>${esc(item.name||place?.name||'预约')}</h4><p class="wallet-dates">${esc(niceDate(item.date))}${spotlight?' · '+spotlight:''}</p>${address?`<p class="wallet-address">${esc(address)}</p>`:''}${item.payment?`<p class="wallet-meta">${esc(item.payment)}</p>`:''}${item.confirmation?`<p class="wallet-meta">确认号 <span>${esc(item.confirmation)}</span></p>`:''}${item.note?`<p class="wallet-note">${esc(item.note)}</p>`:''}${links({...item,address},guide)}</article>`;
+  return `<article class="wallet-card"><div class="wallet-card-top"><span class="wallet-kicker">${item.status==='pending'?'待确认':'已预约'}${time?' · '+esc(time)+' 日本时间':''}</span>${editButton('bookings',item.id)}</div><h4>${esc(item.name||place?.name||'预约')}</h4><p class="wallet-dates">${esc(niceDate(item.date))}</p>${address?`<p class="wallet-address">${esc(address)}</p>`:''}${item.payment?`<p class="wallet-meta">${esc(item.payment)}</p>`:''}${item.confirmation?`<p class="wallet-meta">确认号 <span>${esc(item.confirmation)}</span></p>`:''}${item.note?`<p class="wallet-note">${esc(item.note)}</p>`:''}${links({...item,address},guide)}</article>`;
 }
 function flightCard(item){return `<article class="wallet-card flight-card"><div class="wallet-card-top"><span class="wallet-kicker">${esc(item.label||'航班')}${item.number?' · '+esc(item.number):''}</span>${editButton('flights',item.id)}</div><div class="flight-leg"><div><strong>${esc(item.depTime||'待补时间')}</strong><p>${esc(item.depPlace||'出发机场')}</p><small>${esc(niceDate(item.depDate))} · ${esc(item.depZone||'当地时间')}</small></div><span class="flight-arrow" aria-hidden="true">→</span><div><strong>${esc(item.arrTime||'待补时间')}</strong><p>${esc(item.arrPlace||'到达机场')}</p><small>${esc(niceDate(item.arrDate))} · ${esc(item.arrZone||'当地时间')}</small></div></div>${!item.number?'<p class="wallet-meta">航班号待补充</p>':''}${item.note?`<p class="wallet-note">${esc(item.note)}</p>`:''}</article>`}
 export function renderJourney(){
   if(!root())return;
-  const data=getJourneyData(),now=today();
-  const dates=[...data.flights.map(x=>x.depDate),...data.stays.map(x=>x.checkin),...data.bookings.map(x=>x.date)].filter(validDate).sort();
-  const ends=[...data.flights.map(x=>x.arrDate),...data.stays.map(x=>x.checkout),...data.bookings.map(x=>x.date)].filter(validDate).sort();
-  const start=dates[0],end=ends.at(-1);
-  let heading='把确定的事，放在手边',sub='住哪里、什么时候入场，打开就能找到。';
-  if(start){const days=Math.ceil((Date.parse(start+'T00:00:00Z')-Date.parse(now+'T00:00:00Z'))/86400000);heading=days>0?`还有 ${days} 天，去关西`:end&&now>end?'这趟旅程的资料':'在关西，慢慢逛';sub=`${niceDate(start)}${end&&end!==start?' — '+niceDate(end):''} · 景点随走随选`}
-  document.querySelector('#journeyHeading').textContent=heading;
-  document.querySelector('#journeySubtitle').textContent=sub;
-  if(!viewDate)viewDate=start&&now<start?start:now;
-  document.querySelector('#journeyDate').value=viewDate;
-  document.querySelector('#journeyDateLabel').textContent=viewDate===now?'今天要用':niceDate(viewDate)+'要用';
-  const stay=data.stays.filter(x=>x.checkin&&x.checkin<=viewDate&&(!x.checkout||viewDate<x.checkout)).sort((a,b)=>b.checkin.localeCompare(a.checkin))[0];
-  const currentTime=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
-  const dayBookings=data.bookings.filter(x=>x.status==='confirmed'&&x.date===viewDate).sort((a,b)=>(a.time||'99:99').localeCompare(b.time||'99:99'));
-  const next=dayBookings.find(x=>viewDate!==now||!x.time||(x.endTime||x.time)>=currentTime);
-  const returnTrip=viewDate===now?dayBookings.find(x=>x.placeId===SUNTORY_PLACE_ID&&x.endTime&&x.endTime<currentTime):null;
-  const spotlight=next?bookingCard(next,'下一项'):returnTrip?bookingCard(returnTrip,'返程参考'):emptyCard('这一天没有待赴约事项','有确定的入场时间，再加进来。','bookings','添加预约');
-  document.querySelector('#journeyNow').innerHTML=(stay?stayCard(stay,true):emptyCard('这晚的住宿还没记','订好后，把日文地址放在这里。','stays','添加住宿'))+spotlight;
-  document.querySelector('#flightCards').innerHTML=data.flights.length?data.flights.slice().sort((a,b)=>(a.depDate+a.depTime).localeCompare(b.depDate+b.depTime)).map(flightCard).join(''):emptyCard('往返时间，整理在一处','添加后，起飞和到达分别显示当地时间。','flights','添加航班');
-  document.querySelector('#stayCards').innerHTML=data.stays.length?data.stays.slice().sort((a,b)=>a.checkin.localeCompare(b.checkin)).map(x=>stayCard(x)).join(''):emptyCard('酒店还没定也没关系','确认后再加；不预设住几晚。');
-  document.querySelector('#bookingCards').innerHTML=data.bookings.length?data.bookings.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(x=>bookingCard(x)).join(''):emptyCard('只记录确定要赴的约','收藏里的景点，仍然留在收藏。');
+  const data=getJourneyData();
+  document.querySelector('#flightCards').innerHTML=data.flights.length?data.flights.slice().sort((a,b)=>(a.depDate+a.depTime).localeCompare(b.depDate+b.depTime)).map(flightCard).join(''):emptyCard('暂无航班','添加后显示起飞和到达的当地时间。','flights','添加航班');
+  document.querySelector('#stayCards').innerHTML=data.stays.length?data.stays.slice().sort((a,b)=>a.checkin.localeCompare(b.checkin)).map(x=>stayCard(x)).join(''):emptyCard('暂无住宿','');
+  document.querySelector('#bookingCards').innerHTML=data.bookings.length?data.bookings.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(x=>bookingCard(x)).join(''):emptyCard('暂无预约','');
   const tasks=data.tasks;
   document.querySelector('#prepCount').textContent=tasks.length?`${tasks.filter(x=>x.done).length}/${tasks.length}`:'';
   document.querySelector('#journeyTasks').innerHTML=tasks.map(task=>`<div class="wallet-task"><label><input type="checkbox" data-task="${esc(task.id)}" ${task.done?'checked':''}><span>${esc(task.label)}</span></label><button type="button" data-remove-task="${esc(task.id)}" aria-label="删除准备事项：${esc(task.label)}">×</button></div>`).join('')||'<p class="wallet-muted">把还没办好的事加在这里，完成一项勾一项。</p>';
@@ -110,7 +92,6 @@ async function copyText(value){try{await navigator.clipboard.writeText(value);st
 export function setupJourney(config){
   options=config;
   document.querySelector('#tripBackup').onclick=()=>options.onBackup();
-  document.querySelector('#journeyDate').onchange=event=>{viewDate=validDate(event.target.value)?event.target.value:today();renderJourney()};
   root().addEventListener('click',event=>{
     const button=event.target.closest('button');if(!button)return;
     if(button.dataset.add)openEditor(button.dataset.add);
@@ -161,7 +142,6 @@ export function setupJourney(config){
       if(addBooking)data.bookings.push(booking);
       if((addFlights||addBooking)&&!save(data)){renderJourney();return}
       if(booking){
-        viewDate=existing?.date||booking.date;
         status(existing?'已打开本机已有预约。':addBooking?'已载入预约，只保存在本机。':'预约记录已满，未载入。');
       }else if(addFlights)status('已载入你确认过的航班时间，航班号仍待补充。');
     }catch{status('确认信息未能载入，可以手动添加。')}
