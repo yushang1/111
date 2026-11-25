@@ -16,12 +16,21 @@ const stop = '西口バスターミナル 1番のりば';
 const hankyu = '阪急 西山天王山駅 東口';
 const jr = 'https://timetable.jr-odekake.net/';
 const jrInfo = 'https://trafficinfo.westjr.co.jp/kinki.html';
+const umekojiMap = 'https://eki.jr-odekake.net/premises?id=0610708';
+const kyotoMap = 'https://eki.jr-odekake.net/premises?id=0610116';
+const kyotoMapPdf = 'https://eki.jr-odekake.net/premises/0610116_79dd66fc-ebf6-4fc7-a44a-606247cfe8ae.pdf';
+const kyotoMap3d = 'https://3dmap.jrnc.jp/JRW/mobile/#/kyotoja/';
 const phone = '075-952-2020';
 const railTimetableDate = '2026-12-12';
 const researchDate = '2026-11-24';
 const outbound = [['10:00', '10:10'], ['10:50', '11:00'], ['12:30', '12:40'], ['13:20', '13:30'], ['14:10', '14:20']];
 const inbound = [['12:20', '12:30'], ['13:10', '13:20'], ['14:50', '15:00'], ['15:40', '15:50'], ['16:30', '16:40']];
 const photos = {
+  'umekoji-entrance': ['梅小路京都西站入口', '2019 年实景。找 JR 标志和「梅小路京都西駅」站名。', 'Umekoji-Kyotonishi_Station_entrance_20190317.jpg', 'Rsa', 'CC BY-SA 3.0', 'licenses/by-sa/3.0/', 840, 560],
+  'umekoji-gates': ['梅小路京都西站闸机', '2019 年实景。过中央改札口后，看「1」的箭头去京都方向。', 'Umekoji-Kyotonishi_Station_nov_24_2019_various_09_26_45_511000.jpeg', 'Nesnad', 'CC BY 4.0', 'licenses/by/4.0/', 840, 630],
+  'umekoji-platform': ['梅小路京都西站 1 号站台', '2019 年从 2 号站台拍摄。照片左侧、轨道对面是往京都的 1 号站台。', 'Umekoji-Kyotonishi_Station_nov_24_2019_various.jpeg', 'Nesnad', 'CC BY 4.0', 'licenses/by/4.0/', 840, 630],
+  'kyoto-transfer': ['京都站换乘指示牌', '2025 年实景。认蓝色 A 和「JR京都線」「新大阪・大阪」字样。站台以现场发车屏为准。', '202505_Sign_indicating_platform_directions_in_Kyoto_Station.jpg', 'Jonashtand', 'CC BY-SA 4.0', 'licenses/by-sa/4.0/', 840, 498, '裁切缩放版'],
+  'kyoto-departures': ['京都站 4／5 号站台发车屏', '2022 年实景。核对车种、出发时间、行先和站台，照片里的班次仅供辨认屏幕。', 'JR_West_Kyōto_Station_JR_Line_Platform_4・5.jpg', 'Mister0124', 'CC BY-SA 4.0', 'licenses/by-sa/4.0/', 365, 155, '裁切版'],
   west: ['长冈京站西口广场', '2013 年实景。可辨认西口环岛、巴士候车棚和出租车等候区。找 1 号点时看现场站牌。', 'Nagaokakyo_Station_West_Exit_Square_-_May_1,_2013.jpg', 'Toshiyuki IMAI', 'CC BY-SA 2.0', 'licenses/by-sa/2.0/'],
   shuttle: ['三得利工厂接驳车', '2011 年车辆实照。识别 SUNTORY 字样，现场向司机确认目的地。', 'ISUZU_ERGAmio,_SUNTORY_Kyoto_Brewery_Plant_(Right_rear_perspective_view).jpg', 'Mj-bird', 'CC BY-SA 3.0', 'licenses/by-sa/3.0/'],
   factory: ['工厂建筑地标', '2009 年厂区实景。可辨认银色罐体和 SUNTORY 字样，正门位置看官方道路图。', 'Suntory_Kyoto_Brewery.JPG', 'Whity（Kirakirameister）', 'CC BY-SA 3.0', 'licenses/by-sa/3.0/'],
@@ -62,14 +71,14 @@ const online = (url, label) => `<a href="${esc(url)}" target="_blank" rel="noope
 const mapSearch = query => `https://www.google.com/maps/search/?${new URLSearchParams({api:'1',query})}`;
 const directions = (origin,destination,travelmode) => `https://www.google.com/maps/dir/?${new URLSearchParams({api:'1',origin,destination,travelmode})}`;
 const phrase = (label,japanese,place='') => `<button type="button" class="wallet-action" data-phrase="${esc(japanese)}" data-phrase-place="${esc(place)}">${label}</button>`;
-const row = (time,kind,title,description) => `<li><div class="suntory-time"><strong>${esc(time)}</strong><small>${kind}</small></div><div><h4>${title}</h4><p>${description}</p></div></li>`;
+const row = (time,kind,title,description,details='') => `<li><div class="suntory-time"><strong>${esc(time)}</strong><small>${kind}</small></div><div><h4>${title}</h4><p>${description}</p>${details}</div></li>`;
 const photoFile = key => `suntory-photos/${key}.jpg`;
 
 function photo(key) {
-  const [title,caption,file,author,license,licensePath] = photos[key];
+  const [title,caption,file,author,license,licensePath,width=960,height=key==='hankyu'?630:720,edition='缩放版'] = photos[key];
   return `<figure class="suntory-photo">
-    <button type="button" data-photo="${key}" aria-label="放大看${title}"><img src="${photoFile(key)}" alt="${title}" loading="lazy" width="960" height="${key==='hankyu'?630:720}"></button>
-    <figcaption><strong>${title}</strong><br>${caption}<br>${online(`https://commons.wikimedia.org/wiki/File:${encodeURIComponent(file)}`,esc(author))} · ${online(`https://creativecommons.org/${licensePath}`,license)} · 缩放版</figcaption>
+    <button type="button" data-photo="${key}" aria-label="放大看${title}"><img src="${photoFile(key)}" alt="${title}" loading="lazy" width="${width}" height="${height}"></button>
+    <figcaption><strong>${title}</strong><br>${caption}<br>${online(`https://commons.wikimedia.org/wiki/File:${encodeURIComponent(file)}`,esc(author))} · ${online(`https://creativecommons.org/${licensePath}`,license)} · ${edition}</figcaption>
   </figure>`;
 }
 
@@ -91,7 +100,6 @@ function renderGuide(booking,place) {
   const bus = plan.bus;
   const back = plan.returnBus;
   const next = plan.laterBus;
-  const rail = plan.datedRail ? `JR 嵯峨野线 <strong>12:17 梅小路京都西 → 12:20 京都</strong>。换 JR 京都线大阪方向 <strong>12:39 京都 → 12:50 长冈京</strong>，京都站时刻表列 5 号站台。` : '搭 JR 嵯峨野线往京都，在京都换乘 JR 京都线大阪方向，选停靠长冈京的列车。按预约日期核对班次。';
   const bookingStatus = booking.status === 'pending' ? '待确认' : '已预约';
   return `
     <section class="suntory-summary" aria-label="预约和登记时间">
@@ -107,8 +115,16 @@ function renderGuide(booking,place) {
     <section aria-labelledby="suntoryOutbound">
       <h3 id="suntoryOutbound">去程与回程</h3>
       <ol class="suntory-steps">
-        ${row(plan.hotelTime,'建议出发','京都梅小路皇家花园酒店','步行约 1 分钟至 <span lang="ja">梅小路京都西駅</span>。 ' + online(directions(hotel,umekoji,'walking'),'酒店到车站'))}
-        ${row(plan.stationTime ? `≤ ${plan.stationTime}` : '', '目标到站','JR 京都站换乘 → 长冈京站',rail + ' 上车前核对现场屏幕的停站和站台。')}
+        ${row(plan.hotelTime,'建议出发','酒店 → 梅小路京都西站',`<strong>京都梅小路皇家花园酒店</strong><br><span lang="ja">${hotel}</span><br><span lang="ja">〒600-8835 京都府京都市下京区観喜寺町9-3</span><br>步行约 1 分钟到 <strong>梅小路京都西站</strong><br><span lang="ja">${umekoji} · 京都府京都市下京区観喜寺町3番地</span>`, `
+          <p>在 <strong lang="ja">中央改札口</strong> 刷交通卡进站，上 2 楼找 <strong lang="ja">1番のりば・京都方面</strong>。搭 JR 嵯峨野线（Google Maps 可显示为「山阴本线」），坐 <strong>1 站</strong>到京都。${plan.datedRail?'计划 <strong>12:17 发 → 12:20 到</strong>。':''}</p>
+          <div class="suntory-actions">${online(directions(hotel,umekoji,'walking'),'酒店到车站')}${online(umekojiMap,'JR 官方站内图')}</div>
+          <details class="suntory-details"><summary>看入口、闸机和站台照片</summary><div class="suntory-photos">${photo('umekoji-entrance')}${photo('umekoji-gates')}${photo('umekoji-platform')}</div></details>`)}
+        ${row(plan.datedRail?'12:20':'','站内换乘','京都站换乘',`<strong>留在 JR 在来线付费区内</strong>，不用出站，也不用再刷交通卡。顺着 <strong lang="ja">JR京都線（A）／新大阪・大阪方面</strong> 的指示牌走。${plan.datedRail?'原计划 <strong>5 号站台</strong>，实际站台以当天发车屏为准。':'站台以当天发车屏为准。'}`,`
+          <div class="suntory-actions">${online(kyotoMap,'京都站官方站内图')}${online(kyotoMapPdf,'放大看官方 PDF')}${online(kyotoMap3d,'官方 3D 换乘图')}</div>
+          <details class="suntory-details"><summary>看换乘指示牌和发车屏</summary><div class="suntory-photos">${photo('kyoto-transfer')}${photo('kyoto-departures')}</div></details>`)}
+        ${row(plan.datedRail?'12:39':'','计划发车','京都站 → 长冈京站',`搭 JR 京都线（Google Maps 可显示为「东海道本线」），往大阪方向。选停靠 <strong lang="ja">長岡京</strong> 的普通或快速。<strong>新快速不停长冈京。</strong>${plan.datedRail?'计划 <strong>12:50 到</strong>。':''}`,`
+          <p>普通列车坐 <strong>4 站</strong><br><span lang="ja">京都 → 西大路 → 桂川 → 向日町 → 長岡京</span></p>`)}
+        ${row(plan.stationTime ? `≤ ${plan.stationTime}` : '', '目标到站','长冈京站刷卡出站','用进站时的同一张交通卡刷卡出站，顺着 <strong lang="ja">西口</strong> 去 <strong lang="ja">西口バスターミナル 1番のりば</strong>。' + '<br><a href="#suntoryStop" data-suntory-jump>看西口和乘车点指引</a>')}
         ${row(bus?.[0],'官方常规','西口巴士总站 1 号点','免费接驳，先到先上。' + (bus ? `如按常规运行，预计 ${bus[1]} 到厂。` : '请按当日安排选择接驳或备用交通。'))}
         ${row(bus?.[1],'估算到厂','到工厂正门后去受付','预留付款和登记时间，出示预约确认单。')}
         ${row(`${booking.time || ''}${end}`,bookingStatus,'参观与试饮','返程上车点可在登记时一并确认。')}
