@@ -232,7 +232,7 @@ function setupTrip(){
   setupJourney({
     getPlace,
     onBackup:showBackup,
-    onGuide:booking=>openSuntoryGuide(booking,getPlace(booking.placeId)),
+    onGuide:booking=>openSuntoryGuide(booking,getPlace(booking.placeId),state.data?.places),
     onRoute:address=>{
       $('#routeDestination').value=address;
       $('#routeOrigin').value='';

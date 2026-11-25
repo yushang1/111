@@ -198,7 +198,7 @@
   </dialog>
   <dialog id="stationPhraseDialog" class="wallet-editor" aria-label="向工作人员出示的日文卡片"><div id="stationPhraseContent" class="station-fullscreen"></div></dialog>
   <input id="restoreInput" type="file" accept="application/json" hidden>
-  <script type="module" src="app.js?v=trip-compact-1"></script>
+  <script type="module" src="app.js?v=suntory-night-1"></script>
   <script type="module" src="transit-guide.js?v=suntory-1"></script>
   <script type="module">
     import {openSuntoryGuide, SUNTORY_PLACE_ID} from './suntory-guide.mjs';
@@ -208,16 +208,17 @@
     const factoryAddress = '京都府長岡京市調子3-1-1';
     const gateName = 'サントリー京都ビール工場 正門';
     const fallbackPlace = {japaneseName:factoryName,address:factoryAddress,gate:{name:gateName,mapUrl:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(gateName+' '+factoryAddress)},officialUrl:'https://www.suntory.co.jp/factory/kyoto/'};
-    let placePromise;
-    async function getSuntoryPlace(){
-      if(!placePromise) placePromise=fetch('places.json?v=suntory-1',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('places');return r.json()}).then(data=>data.places.find(p=>p.id===SUNTORY_PLACE_ID)||fallbackPlace).catch(()=>{placePromise=null;return fallbackPlace});
-      return placePromise;
+    let placesPromise;
+    function getSuntoryPlaces(){
+      if(!placesPromise) placesPromise=fetch('places.json?v=suntory-1',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('places');return r.json()}).then(data=>data.places).catch(()=>{placesPromise=null;return []});
+      return placesPromise;
     }
     document.querySelectorAll('[data-open-suntory]').forEach(button=>button.addEventListener('click',async()=>{
       button.disabled=true;
       try{
         const booking=getJourneyData().bookings.find(item=>item.placeId===SUNTORY_PLACE_ID&&item.status==='confirmed'&&item.date&&item.time);
-        openSuntoryGuide(booking||referencePlan,await getSuntoryPlace());
+        const places=await getSuntoryPlaces();
+        openSuntoryGuide(booking||referencePlan,places.find(p=>p.id===SUNTORY_PLACE_ID)||fallbackPlace,places);
         if(!booking){
           const label=document.querySelector('#suntoryContent .suntory-summary');
           if(label){const note=document.createElement('p');note.className='suntory-small';note.textContent='参考场次交通攻略，不代表本机已有预约。';label.prepend(note);}
