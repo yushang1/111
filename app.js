@@ -262,6 +262,6 @@ function restoreBackup(event){
 document.querySelectorAll('.bottom-nav button').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.view)));
 $('#restoreInput').addEventListener('change',restoreBackup);
 setupTrip();
-fetch('places.json?v=suntory-1',{cache:'no-cache'}).then(response=>{if(!response.ok)throw Error('data');return response.json()}).then(data=>{state.data=data;setup()}).catch(()=>{$('#nearbyList').innerHTML='<div class="privacy-card">地点数据加载失败，请稍后重新打开。</div>'});
+fetch('places.json?v=weekly-20261126',{cache:'no-cache'}).then(response=>{if(!response.ok)throw Error('data');return response.json()}).then(data=>{state.data=data;setup()}).catch(()=>{$('#nearbyList').innerHTML='<div class="privacy-card">地点数据加载失败，请稍后重新打开。</div>'});
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
 
