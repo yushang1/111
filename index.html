@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="app.css?v=food-20261115">
   <link rel="stylesheet" href="map.css">
-  <link rel="stylesheet" href="travel-guide.css?v=trip-compact-1">
+  <link rel="stylesheet" href="travel-guide.css?v=itinerary-20261128">
   <link rel="stylesheet" href="maplibre-gl.css">
   <title>关西口袋收藏</title>
 </head>
@@ -191,6 +191,77 @@
       <section id="tripView" class="view" aria-labelledby="tripTitle">
         <div class="section-head"><h2 id="tripTitle">出行</h2><button id="tripBackup" class="outline-btn">备份</button></div>
         <nav class="wallet-shortcuts" aria-label="出行资料"><button type="button" data-jump="flightSection">往返航班</button><button type="button" data-jump="staySection">住宿</button><button type="button" data-jump="bookingSection">预约</button><button type="button" data-jump="prepSection">准备事项</button></nav>
+        <section id="itinerarySection" class="wallet-section" aria-labelledby="itineraryTitle">
+          <div class="wallet-section-head"><h3 id="itineraryTitle">六天五晚行程</h3></div>
+          <p class="wallet-dates">2026年12月10日—15日关西旅行</p>
+          <div class="wallet-grid itinerary-days">
+            <details class="wallet-card itinerary-day">
+              <summary><time datetime="2026-12-10">12月10日（周四）</time>｜京都</summary>
+              <ul>
+                <li>下午抵达京都。</li>
+                <li><span class="itinerary-status">已预订</span> 入住京都梅小路皇家花园酒店，10日入住、13日退房，共三晚。</li>
+                <li>京都市区自由活动。</li>
+              </ul>
+            </details>
+            <details class="wallet-card itinerary-day">
+              <summary><time datetime="2026-12-11">12月11日（周五）</time>｜京都</summary>
+              <ul>
+                <li><span class="itinerary-status pending">待定</span> 全天京都游玩，具体景点待定。</li>
+                <li>晚上返回京都梅小路皇家花园酒店。</li>
+              </ul>
+            </details>
+            <details class="wallet-card itinerary-day">
+              <summary><time datetime="2026-12-12">12月12日（周六）</time>｜京都</summary>
+              <ul>
+                <li>上午京都自由活动。</li>
+                <li><strong>13:20</strong> 计划在 JR 长冈京站乘坐免费接驳巴士，出发前复核班次。</li>
+                <li><span class="itinerary-status reserved">已预约</span> <strong>14:35—16:05</strong> 三得利京都天然水啤酒工厂特别试饮体验，3000日元，现场付款。</li>
+                <li>晚上返回京都梅小路皇家花园酒店。</li>
+              </ul>
+            </details>
+            <details class="wallet-card itinerary-day">
+              <summary><time datetime="2026-12-13">12月13日（周日）</time>｜京都 → 奈良 → 大阪</summary>
+              <ul>
+                <li>京都酒店退房，携带行李乘坐近铁前往奈良。</li>
+                <li>在近铁奈良站寄存行李，预计600—1000日元，视柜子尺寸而定。</li>
+                <li><span class="itinerary-status pending">待定</span> 白天游玩奈良，具体景点待定。</li>
+                <li>傍晚取行李，乘坐近铁前往大阪难波。</li>
+                <li><span class="itinerary-status">已预订</span> 入住天然温泉夕雾之汤·多美迎 Premium 大阪难波酒店，已通过智行预订。</li>
+                <li>晚上逛道顿堀、心斋桥，看大阪夜景。</li>
+                <li>酒店免费服务包括天然温泉、桑拿、夜宵拉面、冰淇淋及晨间乳酸菌饮料。夜宵拉面供应时间为 <strong>21:30—23:00</strong>。</li>
+                <li>住宿税200日元，另有可能尚未包含的150日元入浴税，准备现金现场支付。</li>
+              </ul>
+            </details>
+            <details class="wallet-card itinerary-day">
+              <summary><time datetime="2026-12-14">12月14日（周一）</time>｜大阪 → 临空城</summary>
+              <ul>
+                <li>上午可再次体验酒店温泉。</li>
+                <li><strong>11:00 前</strong>退房，具体以订单为准。</li>
+                <li>退房后将行李寄存在酒店前台，官网已确认支持退房当日寄存。</li>
+                <li><span class="itinerary-status pending">待定</span> 白天轻装游玩大阪，具体景点待定。</li>
+                <li>傍晚返回酒店领取行李。</li>
+                <li>从南海难波站乘坐空港急行前往临空城。</li>
+                <li><span class="itinerary-status pending">待预订</span> 入住临空城附近酒店。</li>
+              </ul>
+            </details>
+            <details class="wallet-card itinerary-day">
+              <summary><time datetime="2026-12-15">12月15日（周二）</time>｜临空城 → 回国</summary>
+              <ul>
+                <li>上午逛临空城奥特莱斯。</li>
+                <li>建议 <strong>13:30 左右</strong>抵达关西机场。</li>
+                <li><span class="itinerary-status">已预订</span> <strong>16:30</strong> 乘飞机返回上海。</li>
+              </ul>
+            </details>
+            <details class="wallet-card itinerary-day itinerary-notes">
+              <summary>行程补充</summary>
+              <ul>
+                <li>本次旅行跳过宇治，原有收藏地点保留。</li>
+                <li>抹茶甜品优先考虑中村藤吉京都站店、茶寮都路里祇园本店，顺路体验，不专程排长队。</li>
+                <li>除已预订酒店、航班和啤酒工厂预约外，其他具体游玩安排均为暂定。</li>
+              </ul>
+            </details>
+          </div>
+        </section>
         <section id="flightSection" class="wallet-section" aria-labelledby="flightTitle"><div class="wallet-section-head"><h3 id="flightTitle">往返航班</h3><button type="button" data-add="flights">＋ 添加</button></div><div id="flightCards" class="wallet-grid"></div></section>
         <section id="staySection" class="wallet-section" aria-labelledby="stayTitle">
           <div class="wallet-section-head"><h3 id="stayTitle">住宿</h3><button type="button" data-add="stays">＋ 添加</button></div>
