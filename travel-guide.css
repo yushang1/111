@@ -98,9 +98,26 @@
 .itinerary-day summary:focus-visible {outline:2px solid var(--ink);outline-offset:2px}
 .itinerary-day summary::marker {color:var(--ink-2)}
 .itinerary-day time {white-space:nowrap}
-.itinerary-day ul {margin:0 14px;padding:8px 0 12px 18px;border-top:1px solid var(--line);font-size:14px;line-height:1.65;color:var(--ink-2)}
+.itinerary-day > ul {margin:0 14px;padding:8px 0 12px 18px;border-top:1px solid var(--line);font-size:14px;line-height:1.65;color:var(--ink-2)}
 .itinerary-day li + li {margin-top:5px}
 .itinerary-notes {grid-column:1/-1}
 .itinerary-status {display:inline-block;padding:0 6px;border-radius:5px;background:#e2e9d8;color:var(--ink);font-size:12px;white-space:nowrap}
 .itinerary-status.reserved {background:#e4edf0;color:#24566a}
 .itinerary-status.pending {background:#f7f1e2;color:#765322}
+
+.toyo-guide {margin:0 12px 12px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+.toyo-guide summary > span {margin-left:4px}
+.toyo-guide-content {padding:0 12px 12px;color:var(--ink-2);font-size:14px;line-height:1.65}
+.toyo-guide-content section {padding-top:12px;border-top:1px solid var(--line);margin-bottom:12px}
+.toyo-guide-content section:last-child {margin-bottom:0}
+.toyo-guide-content h4 {margin:0 0 6px;color:var(--ink);font-size:15px}
+.toyo-guide-content p {margin:6px 0}
+.toyo-guide-content ul,.toyo-guide-content ol {margin:6px 0 0;padding-left:20px}
+.toyo-guide-content a:not(.wallet-action) {color:var(--ink);text-underline-offset:3px}
+.toyo-phrases {margin:0}
+.toyo-phrases > div {padding:8px 0;border-bottom:1px solid var(--line)}
+.toyo-phrases > div:last-child {border-bottom:0}
+.toyo-phrases dt {color:var(--ink);font-weight:600}
+.toyo-phrases dd {display:flex;align-items:center;justify-content:space-between;gap:8px;margin:3px 0 0}
+.toyo-phrases [lang=ja] {min-width:0;overflow-wrap:anywhere;user-select:text}
+.toyo-phrases button {flex-shrink:0;min-height:44px}
